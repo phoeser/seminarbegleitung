@@ -1,0 +1,906 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Seminarbegleitung Nicole Ohlemüller</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&display=swap">
+<style>
+/* Layout: ruhige Einspaltigkeit (max 760px) mit einem "Weg" aus Terminpunkten als Leitmotiv; Farben aus nicole-ohlemueller.de */
+:root{
+  --bg:hsl(37 45% 94%);
+  --surface:hsl(37 40% 97.5%);
+  --sand:hsl(33 32% 78%);
+  --line:hsl(33 24% 84%);
+  --ink:hsl(40 4% 14%);
+  --muted:hsl(35 8% 38%);
+  --petrol:hsl(190 39% 23%);
+  --petrol-soft:hsl(190 24% 90%);
+  --on-petrol:hsl(37 45% 96%);
+  --terra:hsl(18 43% 51%);
+  --terra-ink:hsl(18 48% 38%);
+  --terra-soft:hsl(18 50% 92%);
+  --ok:hsl(152 30% 32%);
+  --ok-soft:hsl(152 28% 90%);
+  --warn:hsl(36 70% 36%);
+  --warn-soft:hsl(40 70% 90%);
+  --f-display:"Source Serif 4", "Iowan Old Style", Georgia, serif;
+  --f-body:"Instrument Sans", "Segoe UI", system-ui, sans-serif;
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:hsl(195 22% 10%);--surface:hsl(195 20% 13.5%);--sand:hsl(33 16% 42%);--line:hsl(195 14% 23%);
+  --ink:hsl(37 30% 90%);--muted:hsl(35 12% 68%);--petrol:hsl(190 36% 64%);--petrol-soft:hsl(190 28% 20%);
+  --on-petrol:hsl(195 30% 10%);--terra:hsl(18 55% 62%);--terra-ink:hsl(18 62% 72%);--terra-soft:hsl(18 30% 20%);
+  --ok:hsl(152 35% 62%);--ok-soft:hsl(152 25% 18%);--warn:hsl(38 70% 64%);--warn-soft:hsl(38 40% 18%);color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:hsl(195 22% 10%);--surface:hsl(195 20% 13.5%);--sand:hsl(33 16% 42%);--line:hsl(195 14% 23%);
+  --ink:hsl(37 30% 90%);--muted:hsl(35 12% 68%);--petrol:hsl(190 36% 64%);--petrol-soft:hsl(190 28% 20%);
+  --on-petrol:hsl(195 30% 10%);--terra:hsl(18 55% 62%);--terra-ink:hsl(18 62% 72%);--terra-soft:hsl(18 30% 20%);
+  --ok:hsl(152 35% 62%);--ok-soft:hsl(152 25% 18%);--warn:hsl(38 70% 64%);--warn-soft:hsl(38 40% 18%);color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:760px;margin:0 auto;padding-inline:20px;padding-block:8px 48px}
+h1,h2,h3{font-family:var(--f-display);font-weight:500;line-height:1.2;text-wrap:balance;margin:0}
+h1{font-size:clamp(1.9rem,5vw,2.6rem);letter-spacing:-.01em}
+h2{font-size:1.45rem}
+h3{font-size:1.15rem}
+p{margin:0}
+a{color:var(--petrol)}
+.muted{color:var(--muted)}
+.small{font-size:.875rem}
+.eyebrow{font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--terra-ink);font-weight:600}
+.stack{display:flex;flex-direction:column;gap:16px}
+.stack-lg{display:flex;flex-direction:column;gap:32px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.between{justify-content:space-between}
+
+/* Kopf */
+.top{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between;padding-block:18px;border-bottom:1px solid var(--line);margin-bottom:28px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink);background:none;border:0;padding:0;cursor:pointer;font:inherit;text-align:left}
+.brand-mark{width:38px;height:38px;flex:none}
+.brand-name{font-family:var(--f-display);font-size:1.1rem;line-height:1.1}
+.brand-sub{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+nav.tabs{display:flex;flex-wrap:wrap;gap:4px}
+nav.tabs button{font:inherit;font-size:.9rem;border:0;background:none;color:var(--muted);padding:8px 12px;border-radius:999px;cursor:pointer}
+nav.tabs button[aria-current="page"]{background:var(--petrol);color:var(--on-petrol)}
+nav.tabs button:hover:not([aria-current="page"]){color:var(--ink);background:var(--petrol-soft)}
+
+/* Hinweise */
+.mode{font-size:.8rem;color:var(--muted);display:flex;gap:8px;align-items:center;margin-bottom:20px}
+.mode i{width:8px;height:8px;border-radius:50%;background:var(--ok);display:inline-block}
+.mode.demo i{background:var(--warn)}
+.flash{background:var(--ok-soft);color:var(--ink);border-radius:var(--r);padding:12px 16px;font-size:.95rem;margin-bottom:20px;display:flex;justify-content:space-between;gap:12px}
+.flash.err{background:var(--warn-soft)}
+.flash button{border:0;background:none;color:inherit;cursor:pointer;font:inherit}
+
+/* Flächen */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px}
+.card.quiet{background:transparent}
+.hero{padding-block:4px 8px;display:flex;flex-direction:column;gap:12px}
+.hero .lead{font-size:1.1rem;max-width:58ch}
+.quote{font-family:var(--f-display);font-style:italic;font-size:1.15rem;color:var(--petrol);border-left:2px solid var(--terra);padding-left:16px;max-width:52ch}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.grid2>*{min-width:0}
+
+/* Knöpfe */
+.btn{font:inherit;font-weight:500;font-size:.95rem;border-radius:999px;padding:11px 20px;border:1px solid var(--petrol);background:var(--petrol);color:var(--on-petrol);cursor:pointer;display:inline-flex;align-items:center;gap:8px;text-decoration:none;line-height:1.2}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:transparent;color:var(--petrol)}
+.btn.ghost:hover{background:var(--petrol-soft);filter:none}
+.btn.terra{background:var(--terra);border-color:var(--terra);color:var(--on-petrol)}
+.btn.danger{background:transparent;border-color:var(--terra);color:var(--terra-ink)}
+.btn.sm{padding:7px 14px;font-size:.85rem}
+.link{font:inherit;background:none;border:0;color:var(--petrol);cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--terra);outline-offset:2px}
+
+/* Pillen */
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;font-weight:600;letter-spacing:.04em;padding:3px 10px;border-radius:999px;background:var(--petrol-soft);color:var(--petrol);white-space:nowrap}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.open{background:var(--terra-soft);color:var(--terra-ink)}
+.pill.draft{background:transparent;border:1px dashed var(--sand);color:var(--muted)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+
+/* Weg / Timeline */
+.path{list-style:none;margin:0;padding:0;position:relative}
+.path::before{content:"";position:absolute;left:11px;top:14px;bottom:14px;width:2px;background:var(--line)}
+.path li{position:relative;display:grid;grid-template-columns:24px 1fr;gap:14px;padding-block:10px}
+.path .dot{width:24px;height:24px;border-radius:50%;border:2px solid var(--sand);background:var(--bg);position:relative;z-index:1;display:grid;place-items:center;font-size:.7rem;color:var(--on-petrol)}
+.path li.done .dot{background:var(--petrol);border-color:var(--petrol)}
+.path li.next .dot{border-color:var(--terra);box-shadow:0 0 0 5px var(--terra-soft)}
+.path .when{font-size:.82rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.path .t{font-weight:600}
+.path li>div{min-width:0}
+
+/* Aufgaben */
+.task{display:flex;flex-direction:column;gap:10px}
+.task .head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.task p{color:var(--muted);font-size:.95rem}
+.task .btn{align-self:flex-start;margin-top:4px}
+
+/* Übungen */
+.ex{border-top:1px solid var(--line);padding-block:4px}
+.ex:first-child{border-top:0}
+.ex summary{cursor:pointer;list-style:none;display:flex;gap:12px;align-items:baseline;justify-content:space-between;padding-block:12px}
+.ex summary::-webkit-details-marker{display:none}
+.ex summary .nm{font-weight:600}
+.ex summary .meta{font-size:.8rem;color:var(--muted);white-space:nowrap}
+.ex .body{padding-bottom:16px;display:flex;flex-direction:column;gap:12px}
+.ex ol{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:4px}
+.ex .why{font-size:.92rem;color:var(--muted);background:var(--petrol-soft);border-radius:10px;padding:10px 14px}
+.area{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--terra-ink);font-weight:600}
+.practice{display:inline-flex;gap:8px;align-items:center;font-size:.9rem;cursor:pointer}
+.practice input{accent-color:var(--petrol);width:18px;height:18px}
+.care{font-size:.85rem;color:var(--muted);font-style:italic}
+
+/* Formulare */
+form{display:flex;flex-direction:column;gap:26px}
+fieldset{border:0;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;min-width:0}
+legend{font-family:var(--f-display);font-size:1.1rem;margin-bottom:8px;padding:0}
+label.lbl,.lbl{font-weight:500;font-size:.95rem}
+.hint{font-size:.85rem;color:var(--muted)}
+input[type=text],input[type=email],input[type=date],input[type=number],input[type=url],textarea,select{font:inherit;font-size:1rem;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%}
+textarea{min-height:88px;resize:vertical}
+input:focus,textarea:focus,select:focus{border-color:var(--petrol);outline:none;box-shadow:0 0 0 3px var(--petrol-soft)}
+.scale{display:flex;flex-direction:column;gap:6px;padding:14px 16px;border-radius:12px;background:var(--surface);border:1px solid var(--line)}
+.scale .q{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+.scale output{font-family:var(--f-display);font-size:1.3rem;color:var(--petrol);min-width:2ch;text-align:right;font-variant-numeric:tabular-nums}
+.scale .ends{display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted)}
+input[type=range]{width:100%;accent-color:var(--petrol)}
+.choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.choice{position:relative}
+.choice input{position:absolute;opacity:0;inset:0;cursor:pointer}
+.choice span{display:flex;flex-direction:column;gap:2px;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:12px 14px;height:100%;cursor:pointer}
+.choice b{font-weight:600}
+.choice small{color:var(--muted);font-size:.83rem}
+.choice input:checked+span{border-color:var(--petrol);box-shadow:inset 0 0 0 1px var(--petrol);background:var(--petrol-soft)}
+.choice input:focus-visible+span{outline:2px solid var(--terra);outline-offset:2px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{position:relative}
+.chip input{position:absolute;opacity:0;inset:0;cursor:pointer}
+.chip span{display:inline-block;font-size:.85rem;border:1px solid var(--line);border-radius:999px;padding:5px 12px;background:var(--surface);cursor:pointer}
+.chip input:checked+span{background:var(--petrol);color:var(--on-petrol);border-color:var(--petrol)}
+.chip input:focus-visible+span{outline:2px solid var(--terra);outline-offset:2px}
+.form-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding-top:8px;border-top:1px solid var(--line)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.two>*{min-width:0;display:flex;flex-direction:column;gap:6px}
+.sess{border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px;background:var(--surface)}
+.sess .row{justify-content:space-between}
+.confirm{display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:var(--terra-soft);border-radius:12px;padding:10px 14px}
+
+/* Admin */
+.list{display:flex;flex-direction:column}
+.item{display:flex;flex-wrap:wrap;gap:10px 16px;justify-content:space-between;align-items:center;padding-block:14px;border-top:1px solid var(--line)}
+.item:first-child{border-top:0}
+.item .info{min-width:0;flex:1 1 240px}
+.item .t{font-weight:600}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px}
+.stat b{display:block;font-family:var(--f-display);font-size:1.7rem;font-weight:500;color:var(--petrol);font-variant-numeric:tabular-nums;line-height:1.1}
+.stat span{font-size:.82rem;color:var(--muted)}
+.bars{display:flex;flex-direction:column;gap:10px}
+.bar{display:grid;grid-template-columns:minmax(110px,160px) 1fr 64px;gap:10px;align-items:center;font-size:.88rem}
+.bar .track{position:relative;height:10px;background:var(--line);border-radius:999px;overflow:hidden}
+.bar .fill{position:absolute;left:0;top:0;bottom:0;border-radius:999px}
+.bar .pre{background:var(--sand)}
+.bar .post{background:var(--petrol);top:3px;bottom:3px}
+.bar .v{font-variant-numeric:tabular-nums;color:var(--muted);text-align:right;white-space:nowrap}
+.legend{display:flex;gap:16px;font-size:.8rem;color:var(--muted)}
+.legend i{display:inline-block;width:12px;height:8px;border-radius:4px;margin-right:6px;vertical-align:middle}
+.person summary{cursor:pointer;display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:space-between;align-items:center;padding-block:14px;list-style:none}
+.person summary::-webkit-details-marker{display:none}
+.person{border-top:1px solid var(--line)}
+.person:first-child{border-top:0}
+.person .body{padding-bottom:18px;display:flex;flex-direction:column;gap:16px}
+.spark{color:var(--terra)}
+.kv{display:grid;grid-template-columns:minmax(120px,190px) 1fr;gap:4px 14px;font-size:.92rem}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0;min-width:0;overflow-wrap:anywhere}
+.subtabs{display:flex;flex-wrap:wrap;gap:6px;border-bottom:1px solid var(--line);padding-bottom:10px}
+.subtabs button{font:inherit;font-size:.9rem;background:none;border:1px solid transparent;border-radius:999px;padding:6px 14px;color:var(--muted);cursor:pointer}
+.subtabs button[aria-selected="true"]{border-color:var(--petrol);color:var(--petrol);font-weight:500}
+.empty{border:1px dashed var(--sand);border-radius:var(--r);padding:24px;text-align:left;color:var(--muted);display:flex;flex-direction:column;gap:10px}
+.empty b{color:var(--ink);font-family:var(--f-display);font-weight:500;font-size:1.1rem}
+
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);font-size:.85rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between}
+footer .claim{font-family:var(--f-display);font-style:italic;color:var(--petrol)}
+.loading{display:flex;gap:14px;align-items:center;color:var(--muted);padding-block:40px}
+.breath{width:28px;height:28px;border-radius:50%;border:2px solid var(--petrol);animation:breath 4s ease-in-out infinite}
+@keyframes breath{0%,100%{transform:scale(.7);opacity:.5}50%{transform:scale(1);opacity:1}}
+@media (prefers-reduced-motion: reduce){.breath{animation:none}}
+@media (max-width:520px){.wrap{padding-inline:16px}.card{padding:18px}.bar{grid-template-columns:1fr 56px}.bar .lab{grid-column:1/-1}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <button class="brand" data-go="home" aria-label="Zur Startseite">
+      <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="none" stroke="var(--petrol)" stroke-width="1.5"/><path d="M13 22c2.5-5 5-5 7-2s4.5 3 7-2" fill="none" stroke="var(--terra)" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <span><span class="brand-name">Nicole Ohlemüller</span><br><span class="brand-sub">Seminarbegleitung</span></span>
+    </button>
+    <nav class="tabs" id="nav" aria-label="Bereiche"></nav>
+  </header>
+  <div id="mode"></div>
+  <div id="flash"></div>
+  <main id="app"><div class="loading"><div class="breath"></div><p>Einen Atemzug lang Geduld, die Seminarbegleitung lädt.</p></div></main>
+  <footer>
+    <span class="claim">Vertraulich. Klar. Ohne Druck.</span>
+    <span>Kontakt: <span class="sel">kontakt@nicole-ohlemueller.de</span> · <a href="https://www.nicole-ohlemueller.de/impressum" target="_blank" rel="noopener">Impressum</a> · <a href="https://www.nicole-ohlemueller.de/datenschutz-1" target="_blank" rel="noopener">Datenschutz</a></span>
+  </footer>
+</div>
+
+<script>
+/* ---------- Inhalte & Konstanten ---------- */
+const AREAS=['Orientierung','Gleichgewicht','Stabilität','Atmung','Wahrnehmung','Grenzen'];
+const FORMATS=['Workshop','Training','Mentoring','Sonstiges'];
+const STATUS={entwurf:'Entwurf',offen:'Buchbar',laufend:'Läuft',abgeschlossen:'Abgeschlossen'};
+const CALENDLY='https://calendly.com/nicole-ohlemueller/30min';
+const ITEMS=[
+ {k:'ruhe',q:'Wie oft bist du innerlich wirklich ruhig?',lo:'fast nie',hi:'sehr oft',s:'Innere Ruhe'},
+ {k:'spueren',q:'Wie früh spürst du, wann es dir zu viel wird?',lo:'erst, wenn nichts mehr geht',hi:'früh und deutlich',s:'Frühwarnsignale'},
+ {k:'raum',q:'Wie viel Raum hast du im Kopf für dich selbst?',lo:'kaum welchen',hi:'genug',s:'Raum für mich'},
+ {k:'grenzen',q:'Wie leicht fällt es dir, Nein zu sagen?',lo:'sehr schwer',hi:'leicht',s:'Grenzen'},
+ {k:'gewissen',q:'Wie frei bist du von schlechtem Gewissen, wenn du etwas für dich tust?',lo:'gar nicht',hi:'ganz',s:'Ohne schlechtes Gewissen'},
+ {k:'erholung',q:'Wie gut kannst du dich erholen, im Schlaf und in Pausen?',lo:'kaum',hi:'gut',s:'Erholung'},
+ {k:'praesenz',q:'Wie oft bist du innerlich da, bei dir?',lo:'selten',hi:'meistens',s:'Präsenz'}
+];
+const ZUSTAND=[
+ {k:'da',t:'Ruhig und da',d:'Ich spüre mich, der Atem geht leicht.'},
+ {k:'strom',t:'Unter Strom',d:'Innerlich angespannt, der Kopf läuft.'},
+ {k:'leer',t:'Müde und leer',d:'Wenig Energie, eher abgeschaltet.'},
+ {k:'unklar',t:'Weiß ich gerade nicht',d:'Auch das ist eine gute Antwort.'}
+];
+const WUNSCH=[
+ {k:'einstieg',t:'Erst mal verstehen',d:'Ein Abend als Einstieg in das Thema Nervensystem.',f:'Workshop'},
+ {k:'ueben',t:'Regelmäßig üben',d:'Über mehrere Wochen dranbleiben, in einer Gruppe.',f:'Training'},
+ {k:'begleitung',t:'Persönliche Begleitung',d:'Meine Situation als Mutter und Führungskraft sortieren.',f:'Mentoring'},
+ {k:'offen',t:'Weiß ich noch nicht',d:'Ich möchte mich erst orientieren.',f:'Workshop'}
+];
+const ZEIT=[{k:'abend',t:'Einen Abend'},{k:'woche',t:'Einmal pro Woche'},{k:'flex',t:'Das ist gerade schwer zu sagen'}];
+
+/* Startinhalte, nur für den Demo-Modus ohne zentrale Ablage */
+const DEFAULTS={"exercises":[
+{"id":"ex-umschauen","title":"Langsam umschauen","area":"Orientierung","duration":3,"summary":"Den Raum mit Augen und Kopf langsam erkunden und dem Körper zeigen: Hier ist es sicher.","steps":["Setz dich bequem hin, beide Füße am Boden.","Lass deinen Blick langsam durch den Raum wandern, der Kopf darf mitgehen.","Bleib dort kurz stehen, wo dein Blick gern verweilt.","Wende dich auch zur Seite und nach hinten, so weit es angenehm ist.","Spür nach: Hat sich an Atmung oder Schultern etwas verändert?"],"why":"Orientierung im Raum ist eine der ältesten Sicherheitsprüfungen des Nervensystems. Findet es nichts Bedrohliches, darf die Anspannung sinken."},
+{"id":"ex-weitwinkel","title":"Weiter Blick","area":"Orientierung","duration":2,"summary":"Vom Tunnelblick in die Weite: das ganze Sichtfeld wahrnehmen.","steps":["Such dir einen Punkt vor dir auf Augenhöhe.","Lass den Blick weich werden, ohne den Punkt zu verlieren.","Nimm wahr, was du am Rand deines Sichtfelds siehst, links, rechts, oben, unten.","Bleib 30 bis 60 Sekunden in diesem weiten Blick."],"why":"Der Tunnelblick gehört zum Stressmodus. Ein weiter Blick ist ein Signal in die andere Richtung."},
+{"id":"ex-benennen","title":"Fünf Dinge benennen","area":"Orientierung","duration":2,"summary":"Mit den Sinnen zurück in den Moment, wenn das Gedankenkarussell läuft.","steps":["Benenne leise fünf Dinge, die du siehst.","Dann vier Geräusche, die du hörst.","Dann drei Stellen, an denen dein Körper etwas berührt.","Zum Schluss ein Atemzug, bei dem du nur zuhörst."],"why":"Holt die Aufmerksamkeit aus dem Kopf zurück in den Raum und in den Körper."},
+{"id":"ex-einbein","title":"Einbeinstand mit Blickpunkt","area":"Gleichgewicht","duration":3,"summary":"Sicher stehen üben, Wackeln inklusive.","steps":["Stell dich neben eine Wand oder Stuhllehne zum Festhalten.","Schau auf einen Punkt auf Augenhöhe.","Heb einen Fuß leicht an und halte 20 bis 30 Sekunden.","Wechsle die Seite. Wackeln ist erlaubt und gehört dazu.","Wenn du magst: für ein paar Sekunden die Augen schließen, nur mit Halt."],"why":"Das Gleichgewichtssystem ist eng mit dem Gefühl von Sicherheit verbunden. Wer sicher steht, fühlt sich oft auch innerlich stabiler."},
+{"id":"ex-pendeln","title":"Gewicht verlagern","area":"Gleichgewicht","duration":2,"summary":"Im Stand langsam pendeln und die eigene Mitte finden.","steps":["Stell dich hüftbreit hin, die Knie weich.","Verlagere dein Gewicht langsam nach vorn zu den Zehen, dann zurück zu den Fersen.","Dann seitlich von links nach rechts.","Werde immer kleiner in der Bewegung, bis du deine Mitte spürst."],"why":"Du erlebst, wo deine Mitte ist und dass du sie selbst wiederfinden kannst."},
+{"id":"ex-tandem","title":"Tandemstand","area":"Gleichgewicht","duration":2,"summary":"Ein Fuß vor dem anderen: kleine Herausforderung für das Gleichgewicht.","steps":["Stell einen Fuß direkt vor den anderen, Ferse an Zehenspitze.","Halt dich anfangs an einer Wand fest.","Halte 20 Sekunden, dann tausch die Füße.","Atme dabei ruhig weiter."],"why":"Kleine, dosierte Herausforderungen trainieren, dass Unsicherheit aushaltbar ist und wieder vergeht."},
+{"id":"ex-erden","title":"Füße spüren","area":"Stabilität","duration":2,"summary":"Über die Fußsohlen Kontakt zum Boden aufnehmen.","steps":["Stell beide Füße flach auf den Boden.","Drück die Fußsohlen sanft in den Boden und lass wieder los.","Wiederhole das fünfmal langsam.","Spür nach, wie der Boden dich trägt."],"why":"Druck und Kontakt geben dem Körper eine klare Rückmeldung: Ich bin gehalten."},
+{"id":"ex-wand","title":"Wand wegschieben","area":"Stabilität","duration":2,"summary":"Die eigene Kraft spüren, dosiert und sicher.","steps":["Stell dich eine Armlänge vor eine Wand.","Leg die Hände auf Schulterhöhe an die Wand.","Schieb mit etwa halber Kraft, als wolltest du die Wand wegdrücken, 10 Sekunden lang.","Lass los und spür nach. Drei Durchgänge."],"why":"Kraft zu spüren, die von dir ausgeht, erleben viele als Gegenmittel zu Ohnmacht und Überforderung."},
+{"id":"ex-haende","title":"Hand auf Herz und Bauch","area":"Stabilität","duration":2,"summary":"Selbstberührung als einfachster Weg zurück zu dir.","steps":["Leg eine Hand auf dein Brustbein, die andere auf den Bauch.","Spür die Wärme und das leichte Gewicht deiner Hände.","Bleib ein paar Atemzüge so, ohne etwas zu verändern.","Frag dich innerlich: Was brauche ich gerade?"],"why":"Selbstberührung ist eine der einfachsten Formen von Selbstregulation und jederzeit verfügbar."},
+{"id":"ex-ausatmen","title":"Lange Ausatmung","area":"Atmung","duration":3,"summary":"Länger aus- als einatmen und so bewusst herunterschalten.","steps":["Atme durch die Nase ein und zähle dabei bis vier.","Atme durch leicht geöffnete Lippen aus und zähle bis sechs.","Wiederhole das fünf- bis zehnmal.","Wenn es anstrengt, zähl kürzer. Es soll sich leicht anfühlen."],"why":"Eine längere Ausatmung spricht den beruhigenden Teil des Nervensystems an."},
+{"id":"ex-summen","title":"Summen","area":"Atmung","duration":2,"summary":"Mit einem tiefen Ton die Ausatmung verlängern.","steps":["Atme ruhig ein.","Summe beim Ausatmen einen tiefen, angenehmen Ton.","Spür die Vibration in Brust, Hals und Gesicht.","Fünf Runden, danach kurz nachspüren."],"why":"Summen verlängert die Ausatmung, und die Vibration wirkt auf viele Menschen beruhigend."},
+{"id":"ex-seufzer","title":"Doppeltes Einatmen","area":"Atmung","duration":1,"summary":"Ein kurzer Entlastungsatemzug für zwischendurch.","steps":["Atme durch die Nase ein.","Setz oben noch einen kleinen Atemzug drauf.","Atme lang durch den Mund aus.","Ein- bis dreimal reicht."],"why":"Ein Entlastungsmuster, das der Körper auch von selbst nutzt, etwa nach dem Weinen."},
+{"id":"ex-stopp","title":"Innerer Bodyguard: Stopp-Geste","area":"Grenzen","duration":3,"summary":"Eine Grenze erst im Körper spüren, dann im Alltag setzen.","steps":["Stell dich aufrecht hin und spür deine Füße.","Heb eine Hand vor dich, die Handfläche nach vorn, als würdest du Stopp sagen.","Sag leise oder laut: Bis hierhin.","Spür nach: Wo wird es fest, wo weit?","Wiederhole die Geste und probier aus, was sie für dich stimmig macht."],"why":"Grenzen beginnen im Körper. Wer sie dort spürt, kann sie im Alltag früher und klarer setzen."},
+{"id":"ex-scan","title":"Kurzer Körper-Check","area":"Wahrnehmung","duration":3,"summary":"Drei Minuten, um Anspannung wahrzunehmen, bevor sie zum Normalzustand wird.","steps":["Schließ die Augen oder senk den Blick.","Wandere mit der Aufmerksamkeit von den Füßen bis zum Kopf.","Nimm wahr, wo es eng, warm, kühl oder ruhig ist, ohne etwas zu ändern.","Beende den Check mit einem Blick durch den Raum."],"why":"Wer Anspannung früher wahrnimmt, kann früher gegensteuern."}
+],"seminars":[
+{"id":"sem-neurobalance","order":1,"title":"Neurobalance Training","subtitle":"Sechs Wochen Nervensystemtraining für mehr Ruhe, Stabilität und Sicherheit im eigenen Körper","format":"Training","status":"offen","place":"Freiraum Forum Bonn","price":"","link":"https://www.nicole-ohlemueller.de/neurobalance-training-bonn","description":"Wir vertiefen die Arbeit mit dem Nervensystem und üben gezielt in den Bereichen Orientierung, Gleichgewicht, Stabilität und Atmung. Ruhig, klar angeleitet und alltagsnah.","sessions":[
+{"id":"nb1","date":"2026-11-03","time":"","title":"Ankommen","focus":"Wie dein Nervensystem arbeitet und was Daueranspannung mit dem Körper macht.","exerciseIds":["ex-scan","ex-umschauen","ex-erden"],"done":false},
+{"id":"nb2","date":"2026-11-10","time":"","title":"Orientierung","focus":"Über Augen und Blick wieder Sicherheit im Raum finden.","exerciseIds":["ex-umschauen","ex-weitwinkel","ex-benennen"],"done":false},
+{"id":"nb3","date":"2026-11-17","time":"","title":"Gleichgewicht","focus":"Sicher stehen, wackeln dürfen, die eigene Mitte finden.","exerciseIds":["ex-einbein","ex-pendeln","ex-tandem"],"done":false},
+{"id":"nb4","date":"2026-11-24","time":"","title":"Stabilität","focus":"Kontakt, Halt und die eigene Kraft spüren.","exerciseIds":["ex-erden","ex-wand","ex-haende"],"done":false},
+{"id":"nb5","date":"2026-12-01","time":"","title":"Atmung","focus":"Mit dem Atem bewusst herunterschalten.","exerciseIds":["ex-ausatmen","ex-summen","ex-seufzer"],"done":false},
+{"id":"nb6","date":"2026-12-08","time":"","title":"Im Alltag","focus":"Was bleibt, was trägt, und wie du früher gegensteuerst.","exerciseIds":["ex-scan","ex-stopp","ex-weitwinkel"],"done":false}]},
+{"id":"sem-bodyguard","order":2,"title":"Der innere Bodyguard","subtitle":"Warum dein Kopf nicht abschaltet und dein Körper nicht zur Ruhe kommt","format":"Workshop","status":"offen","place":"Bonn","price":"59 Euro","link":"https://www.nicole-ohlemueller.de/der-innere-bodyguard","description":"Ein erster körperorientierter Zugang zu deinem Nervensystem. Mit einfachen Übungen erlebst du, wie du wieder mehr Kontakt zu deinem Körper bekommst. Zweiter Termin am 13. Oktober 2026.","sessions":[
+{"id":"bg1","date":"2026-10-06","time":"18:30–20:30","title":"Workshop-Abend","focus":"Anspannung verstehen, erste Schritte in Richtung Regulation.","exerciseIds":["ex-benennen","ex-erden","ex-haende","ex-ausatmen","ex-stopp"],"done":false}]},
+{"id":"sem-platz-1","order":3,"title":"Platzhalter 1","subtitle":"Titel und Beschreibung folgen","format":"Sonstiges","status":"entwurf","place":"","price":"","link":"","description":"","sessions":[{"id":"p1a","date":"","time":"","title":"Termin 1","focus":"","exerciseIds":[],"done":false}]},
+{"id":"sem-platz-2","order":4,"title":"Platzhalter 2","subtitle":"Titel und Beschreibung folgen","format":"Sonstiges","status":"entwurf","place":"","price":"","link":"","description":"","sessions":[{"id":"p2a","date":"","time":"","title":"Termin 1","focus":"","exerciseIds":[],"done":false}]},
+{"id":"sem-platz-3","order":5,"title":"Platzhalter 3","subtitle":"Titel und Beschreibung folgen","format":"Sonstiges","status":"entwurf","place":"","price":"","link":"","description":"","sessions":[{"id":"p3a","date":"","time":"","title":"Termin 1","focus":"","exerciseIds":[],"done":false}]}
+]};
+
+/* ---------- Zustand ---------- */
+const S={authReady:false,meReady:false,user:null,bookings:[],unsubs:[],mode:'loading',db:null,uid:null,isAdmin:false,seminars:[],exercises:[],responses:[],me:{},view:'home',p:{},atab:'seminare',lock:false,editing:null,evalSid:null,flash:null,delAsk:false,readOnly:false};
+const LKEY='no-seminarapp-demo-v1';
+const $=s=>document.querySelector(s);
+const clone=o=>JSON.parse(JSON.stringify(o||{}));
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=p=>p+'-'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const fmtDate=d=>{if(!d)return 'Datum folgt';try{return new Date(d+'T12:00:00').toLocaleDateString('de-DE',{weekday:'short',day:'numeric',month:'long',year:'numeric'})}catch(e){return d}};
+const fmtStamp=t=>{if(!t)return '';try{return new Date(t).toLocaleDateString('de-DE',{day:'numeric',month:'short',year:'numeric'})}catch(e){return ''}};
+const semById=id=>S.seminars.find(s=>s.id===id);
+const exById=id=>S.exercises.find(e=>e.id===id);
+const sortedSems=()=>[...S.seminars].sort((a,b)=>(a.order??99)-(b.order??99)||String(a.title).localeCompare(b.title));
+const visibleSems=()=>sortedSems().filter(s=>s.status==='offen'||s.status==='laufend');
+const nextSession=sem=>(sem.sessions||[]).find(x=>!x.done);
+const avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:null;
+const n1=v=>v==null?'–':(Math.round(v*10)/10).toLocaleString('de-DE');
+
+function loadLocal(){try{return JSON.parse(localStorage.getItem(LKEY)||'null')}catch(e){return null}}
+function saveLocal(){try{localStorage.setItem(LKEY,JSON.stringify({seminars:S.seminars,exercises:S.exercises,me:S.me}))}catch(e){}}
+
+/* ---------- Datenschicht ---------- */
+const FB_V='12.19.0';
+const FB_CFG={apiKey:"AIzaSyA2IQa8xWN5vthlwzz0AUbsXlt3I_fyyb0",authDomain:"seminarbegleitung-41bc3.firebaseapp.com",projectId:"seminarbegleitung-41bc3",storageBucket:"seminarbegleitung-41bc3.firebasestorage.app",messagingSenderId:"617909555890",appId:"1:617909555890:web:f028af9c5b9fc39bd9efab"};
+const EKEY='no-seminar-email';
+/* Admin-Adressen: müssen mit der Liste in firestore.rules übereinstimmen (die Regeln sind die eigentliche Sicherung) */
+const ADMINS=['kontakt@nicole-ohlemueller.de','phoeser@web.de'];
+const DATENSCHUTZ='https://www.nicole-ohlemueller.de/datenschutz-1';
+let FB=null;
+function lsGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
+function lsSet(k,v){try{if(v==null)localStorage.removeItem(k);else localStorage.setItem(k,v)}catch(e){}}
+function initLocal(failed){
+  S.mode='local';S.isAdmin=true;S.authReady=true;
+  const l=loadLocal();
+  if(l&&l.seminars){S.seminars=l.seminars;S.exercises=l.exercises||[];S.me=l.me||{}}
+  else{S.seminars=clone(DEFAULTS.seminars);S.exercises=clone(DEFAULTS.exercises);S.me={};saveLocal()}
+  if(failed)S.flash={msg:'Die Verbindung zur Datenbank klappt gerade nicht. Du siehst die Demo-Fassung.',err:true};
+  render();
+}
+async function init(){
+  if(location.hash==='#demo')return initLocal();
+  try{
+    const base='https://www.gstatic.com/firebasejs/'+FB_V+'/';
+    const [a,b,c]=await Promise.all([import(base+'firebase-app.js'),import(base+'firebase-auth.js'),import(base+'firebase-firestore.js')]);
+    FB={...a,...b,...c};
+  }catch(e){return initLocal(true)}
+  const app=FB.initializeApp(FB_CFG);
+  S.auth=FB.getAuth(app);S.auth.languageCode='de';
+  S.fs=FB.getFirestore(app);
+  S.mode='fb';
+  const onErr=()=>showFlash('Die Verbindung zur Datenbank ist unterbrochen. Lade die Seite bitte neu.',true);
+  FB.onSnapshot(FB.collection(S.fs,'seminars'),s=>{S.seminars=s.docs.map(d=>({...d.data(),id:d.id}));S.pubReady=true;soft()},onErr);
+  FB.onSnapshot(FB.collection(S.fs,'exercises'),s=>{S.exercises=s.docs.map(d=>({...d.data(),id:d.id}));soft()},onErr);
+  if(FB.isSignInWithEmailLink(S.auth,location.href)){
+    const email=lsGet(EKEY);
+    if(email)await completeLink(email);else{S.view='confirm-email'}
+  }
+  FB.onAuthStateChanged(S.auth,async u=>{
+    (S.unsubs||[]).forEach(f=>{try{f()}catch(e){}});S.unsubs=[];
+    S.user=u;S.me={};S.isAdmin=false;S.responses=[];S.bookings=[];
+    if(u){
+      S.unsubs.push(FB.onSnapshot(FB.doc(S.fs,'responses',u.uid),d=>{if(!pending)S.me=d.exists()?clone(d.data()):{};S.meReady=true;soft()},()=>{S.meReady=true;soft()}));
+      S.isAdmin=ADMINS.includes((u.email||'').toLowerCase());
+      if(S.isAdmin){
+        S.unsubs.push(FB.onSnapshot(FB.collection(S.fs,'responses'),s=>{S.responses=s.docs.map(d=>({...d.data(),id:d.id}));soft()},()=>{}));
+        S.unsubs.push(FB.onSnapshot(FB.collection(S.fs,'bookings'),s=>{S.bookings=s.docs.map(d=>({...d.data(),id:d.id}));soft()},()=>{}));
+      }
+    }else{S.meReady=false}
+    S.authReady=true;
+    if(S.view==='confirm-email'&&u)S.view='home';
+    render();
+  });
+}
+async function completeLink(email){
+  try{
+    await FB.signInWithEmailLink(S.auth,email,location.href);
+    lsSet(EKEY,null);
+    history.replaceState(null,'',location.pathname);
+    S.view='home';S.flash={msg:'Du bist angemeldet. Schön, dass du da bist.'};
+  }catch(e){
+    history.replaceState(null,'',location.pathname);
+    S.view='login';S.flash={msg:'Dieser Anmelde-Link ist abgelaufen oder wurde schon benutzt. Fordere bitte einen neuen an.',err:true};
+  }
+}
+async function sendLink(email){
+  const url=location.origin+location.pathname;
+  await FB.sendSignInLinkToEmail(S.auth,email,{url,handleCodeInApp:true});
+  lsSet(EKEY,email);
+}
+let pending=0,chain=Promise.resolve();
+function persistMe(){
+  S.me.updatedAt=new Date().toISOString();
+  if(S.mode==='local'){saveLocal();return Promise.resolve(true)}
+  if(!S.user){showFlash('Bitte melde dich zuerst an.',true);return Promise.resolve(false)}
+  const body=clone(S.me);if(!body.consentAt)body.consentAt=new Date().toISOString();body.email=S.user.email||'';pending++;
+  const ref=FB.doc(S.fs,'responses',S.user.uid);
+  chain=chain.then(()=>FB.setDoc(ref,body)).then(()=>true).catch(e=>{showFlash(writeErr(e),true);return false}).finally(()=>{pending--});
+  return chain;
+}
+async function saveDoc(col,obj){
+  const arr=col==='seminars'?S.seminars:S.exercises;
+  if(S.mode==='local'){const i=arr.findIndex(x=>x.id===obj.id);if(i>=0)arr[i]=obj;else arr.push(obj);saveLocal();return true}
+  const {id,...body}=obj;
+  try{await FB.setDoc(FB.doc(S.fs,col,id),body);return true}catch(e){showFlash(writeErr(e),true);return false}
+}
+async function delDoc(col,id){
+  if(S.mode==='local'){const arr=col==='seminars'?S.seminars:S.exercises;const i=arr.findIndex(x=>x.id===id);if(i>=0)arr.splice(i,1);saveLocal();return true}
+  try{await FB.deleteDoc(FB.doc(S.fs,col,id));return true}catch(e){showFlash(writeErr(e),true);return false}
+}
+async function seedDefaults(){
+  const batch=FB.writeBatch(S.fs);
+  DEFAULTS.exercises.forEach(({id,...b})=>batch.set(FB.doc(S.fs,'exercises',id),b));
+  DEFAULTS.seminars.forEach(({id,...b})=>batch.set(FB.doc(S.fs,'seminars',id),b));
+  try{await batch.commit();showFlash('Startinhalte eingespielt: '+DEFAULTS.seminars.length+' Seminare und '+DEFAULTS.exercises.length+' Übungen.')}catch(e){showFlash(writeErr(e),true)}
+}
+async function saveBooking(b){
+  if(S.mode==='local'){S.me.bookings=[b,...(S.me.bookings||[])].slice(0,10);saveLocal();return true}
+  const body={at:b.at,name:b.name||'',email:b.email||'',zustand:b.zustand||'',vals:b.vals,wunsch:b.wunsch||'',zeit:b.zeit||'',rec:b.rec,consent:true};
+  if(S.user)body.uid=S.user.uid;
+  try{await FB.addDoc(FB.collection(S.fs,'bookings'),body);return true}catch(e){showFlash(writeErr(e),true);return false}
+}
+async function deleteMyData(){
+  if(S.mode==='local'){S.me={};saveLocal();return true}
+  try{
+    pending++;
+    await FB.deleteDoc(FB.doc(S.fs,'responses',S.user.uid));
+    pending--;S.me={};
+    try{await FB.deleteUser(S.user)}catch(e){await FB.signOut(S.auth)}
+    return true;
+  }catch(e){pending=Math.max(0,pending-1);showFlash(writeErr(e),true);return false}
+}
+function writeErr(e){
+  const c=e&&e.code||'';
+  if(c.includes('permission-denied'))return 'Dafür fehlt dir die Berechtigung. Bist du mit der richtigen E-Mail-Adresse angemeldet?';
+  if(c.includes('unavailable'))return 'Gerade besteht keine Verbindung. Bitte prüf dein Internet und versuch es noch einmal.';
+  if(c.includes('invalid-email'))return 'Diese E-Mail-Adresse sieht nicht ganz richtig aus. Bitte prüf sie noch einmal.';
+  if(c.includes('quota')||c.includes('too-many'))return 'Es wurden gerade zu viele Anfragen gesendet. Bitte versuch es in ein paar Minuten noch einmal.';
+  return 'Das hat gerade nicht geklappt. Bitte versuch es gleich noch einmal.';
+}
+function allResponses(){
+  if(S.mode==='local')return S.me&&S.me.name?[{...S.me,id:'local'}]:[];
+  return S.responses;
+}
+function allBookings(){
+  if(S.mode==='local')return (S.me.bookings||[]).map(b=>({...b,name:b.name||S.me.name||''}));
+  return S.bookings;
+}
+
+/* ---------- Navigation ---------- */
+function go(view,p={}){if(S.flash&&S.flash.seen)S.flash=null;S.view=view;S.p=p;S.lock=false;S.delAsk=false;render();if(S.flash)S.flash.seen=true;window.scrollTo({top:0,behavior:'instant'})}
+function soft(){if(!S.lock)render()}
+function showFlash(msg,err){S.flash={msg,err};renderFlash()}
+function renderFlash(){const f=$('#flash');f.innerHTML=S.flash?`<div class="flash${S.flash.err?' err':''}" role="status"><span>${esc(S.flash.msg)}</span><button data-act="flash-x" aria-label="Hinweis schließen">×</button></div>`:''}
+
+function renderNav(){
+  const cur=S.view.startsWith('admin')||S.view==='sem-edit'||S.view==='ex-edit'?'admin':S.view.startsWith('booking')?'booking':'home';
+  const items=[['home','Mein Seminar'],['booking','Vor der Buchung']];
+  if(S.isAdmin)items.push(['admin','Admin']);
+  $('#nav').innerHTML=items.map(([k,t])=>`<button data-go="${k}" ${cur===k?'aria-current="page"':''}>${t}</button>`).join('');
+  let m='';
+  if(S.mode==='local')m=`<p class="mode demo"><i></i>Demo-Modus: Einträge bleiben nur in diesem Browser.</p>`;
+  else if(S.mode==='fb'&&S.user)m=`<p class="mode"><i></i>Angemeldet als ${esc(S.user.email||'')}${S.isAdmin?' · Admin':''} · <button class="link small" data-act="logout">Abmelden</button></p>`;
+  $('#mode').innerHTML=m;
+}
+
+function render(){
+  if(S.mode==='loading')return;
+  renderNav();renderFlash();
+  let v=S.view;let html='';
+  const needsLogin=S.mode==='fb'&&!S.user&&['home','assess','checkin','admin','sem-edit','ex-edit','mydata'].includes(v);
+  if(S.mode==='fb'&&!S.authReady&&v!=='booking'&&v!=='booking-result')html=loadingHtml();
+  else if(v==='confirm-email')html=viewConfirmEmail();
+  else if(needsLogin||v==='login')html=viewLogin();
+  else if(S.mode==='fb'&&v==='home'&&!S.meReady)html=loadingHtml();
+  else if(v==='home')html=viewHome();
+  else if(v==='assess')html=viewAssess();
+  else if(v==='checkin')html=viewCheckin();
+  else if(v==='booking')html=viewBooking();
+  else if(v==='booking-result')html=viewBookingResult();
+  else if(v==='mydata')html=viewMyData();
+  else if(v==='admin')html=S.isAdmin?viewAdmin():viewHome();
+  else if(v==='sem-edit')html=viewSemEdit();
+  else if(v==='ex-edit')html=viewExEdit();
+  $('#app').innerHTML=html;
+  S.lock=needsLogin||['assess','checkin','booking','sem-edit','ex-edit','login','confirm-email','mydata'].includes(v);
+}
+function loadingHtml(){return `<div class="loading"><div class="breath"></div><p>Einen Atemzug lang Geduld, die Seminarbegleitung lädt.</p></div>`}
+
+/* ---------- Anmeldung & Meine Daten ---------- */
+function viewLogin(){
+  if(S.p.sent)return `<div class="stack-lg"><section class="hero"><p class="eyebrow">Anmeldung</p><h1>Schau in dein Postfach.</h1>
+    <p class="lead muted">Wir haben dir einen Anmelde-Link an <b>${esc(S.p.sent)}</b> geschickt. Tipp ihn an, dann bist du direkt in deiner Seminarbegleitung. Der Link gilt für kurze Zeit und nur einmal.</p>
+    <p class="muted small">Keine Mail da? Schau auch im Spam-Ordner nach.</p></section>
+    <div class="row"><button class="btn ghost" data-act="login-again">Andere E-Mail-Adresse verwenden</button></div></div>`;
+  return `<div class="stack-lg"><section class="hero"><p class="eyebrow">Deine Seminarbegleitung</p><h1>Schön, dass du da bist.</h1>
+    <p class="lead muted">Hier findest du deine Selbsteinschätzung, die Check-Ins vor jedem Termin und alle Übungen zum Nachüben. Melde dich mit deiner E-Mail-Adresse an. Du brauchst kein Passwort, wir schicken dir einen Link.</p></section>
+    <form id="f-login" class="card">
+      <fieldset><label class="lbl" for="l-email">Deine E-Mail-Adresse</label>
+      <input type="email" id="l-email" name="email" autocomplete="email" required placeholder="name@beispiel.de"></fieldset>
+      <div class="form-actions"><button class="btn" type="submit">Anmelde-Link senden</button></div>
+    </form>
+    <aside class="card quiet stack"><h3>Du überlegst noch, welches Format zu dir passt?</h3>
+    <p class="muted">Der Orientierungs-Check dauert zwei Minuten und funktioniert ohne Anmeldung.</p>
+    <button class="btn ghost" data-go="booking">Zum Orientierungs-Check</button></aside></div>`;
+}
+function viewConfirmEmail(){
+  return `<div class="stack-lg"><section class="hero"><p class="eyebrow">Anmeldung</p><h1>Fast geschafft.</h1>
+    <p class="lead muted">Du hast den Link auf einem anderen Gerät geöffnet. Bitte gib zur Sicherheit noch einmal die E-Mail-Adresse ein, an die der Link ging.</p></section>
+    <form id="f-confirm" class="card"><fieldset><label class="lbl" for="c-email">E-Mail-Adresse</label>
+    <input type="email" id="c-email" name="email" autocomplete="email" required></fieldset>
+    <div class="form-actions"><button class="btn" type="submit">Anmelden</button></div></form></div>`;
+}
+function viewMyData(){
+  return `<div class="stack-lg"><section class="hero"><p class="eyebrow">Meine Daten</p><h1>Deine Angaben, deine Entscheidung.</h1>
+    <p class="lead muted">Gespeichert sind dein Vorname, deine E-Mail-Adresse, deine Einschätzungen, Check-Ins und die Übungen, die du abgehakt hast. Sehen kann sie nur Nicole Ohlemüller.</p></section>
+    <div class="card stack"><h3>Herunterladen</h3><p class="muted">Du bekommst alle deine Angaben als Datei.</p><button class="btn ghost" data-act="export" style="align-self:flex-start">Meine Daten herunterladen</button></div>
+    <div class="card stack"><h3>Löschen</h3><p class="muted">Alle deine Angaben und dein Zugang werden gelöscht. Das lässt sich nicht rückgängig machen.</p>
+    ${S.delAsk?`<div class="confirm"><span>Wirklich alles löschen?</span><button class="btn sm danger" data-act="delete-me">Ja, alles löschen</button><button class="btn sm ghost" data-act="del-no">Behalten</button></div>`:`<button class="btn danger" data-act="del-me-ask" style="align-self:flex-start">Alle meine Daten löschen</button>`}</div>
+    <p class="small muted">Mehr dazu in der <a href="${DATENSCHUTZ}" target="_blank" rel="noopener">Datenschutzerklärung</a>.</p>
+    <div class="row"><button class="btn ghost" data-go="home">Zurück</button></div></div>`;
+}
+
+/* ---------- Teilnehmerin ---------- */
+function viewHome(){
+  const cur=S.me.current&&semById(S.me.current);
+  if(!S.me.name||!cur||S.p.choose)return viewWelcome();
+  return viewDashboard(cur);
+}
+function viewWelcome(){
+  const sems=visibleSems();
+  return `<div class="stack-lg">
+  <section class="hero">
+    <p class="eyebrow">Deine Seminarbegleitung</p>
+    <h1>${S.me.name?'Welches Seminar besuchst du?':'Schön, dass du da bist.'}</h1>
+    <p class="lead muted">Hier findest du alles rund um dein Seminar: eine kurze Einschätzung vorab, einen Check-In vor jedem Termin und die Übungen, die wir gemeinsam gemacht haben, zum Nachüben im Alltag.</p>
+  </section>
+  <form id="f-join" class="card">
+    <fieldset>
+      <label class="lbl" for="j-name">Wie darf ich dich nennen?</label>
+      <input type="text" id="j-name" name="name" autocomplete="given-name" required value="${esc(S.me.name||'')}" placeholder="Dein Vorname">
+    </fieldset>
+    <fieldset>
+      <legend>Dein Seminar</legend>
+      ${sems.length?`<div class="choices">${sems.map((s,i)=>`<label class="choice"><input type="radio" name="sem" value="${esc(s.id)}" ${(S.me.current===s.id||(!S.me.current&&i===0))?'checked':''} required><span><b>${esc(s.title)}</b><small>${esc(s.format)} · ${esc(firstDateLabel(s))}</small></span></label>`).join('')}</div>`
+      :`<div class="empty"><b>Gerade ist kein Seminar freigeschaltet.</b><span>Sobald Nicole ein Seminar freigibt, erscheint es hier.</span></div>`}
+    </fieldset>
+    ${S.mode==='fb'&&!S.me.consentAt?`<label class="practice" style="align-items:flex-start"><input type="checkbox" id="j-consent" name="consent" required style="margin-top:3px"><span>Ich bin einverstanden, dass meine Angaben (auch zu Anspannung und Befinden) gespeichert werden und Nicole Ohlemüller sie einsehen kann, um das Seminar auf die Gruppe abzustimmen. Ich kann meine Daten jederzeit unter „Meine Daten“ herunterladen oder löschen. <a href="${DATENSCHUTZ}" target="_blank" rel="noopener">Datenschutzerklärung</a></span></label>`:''}
+    <div class="form-actions"><button class="btn" type="submit" ${sems.length?'':'disabled'}>Los geht’s</button>${S.p.choose?`<button type="button" class="btn ghost" data-go="home">Zurück</button>`:''}</div>
+  </form>
+  <aside class="card quiet stack">
+    <h3>Du überlegst noch, welches Format zu dir passt?</h3>
+    <p class="muted">Der Orientierungs-Check dauert zwei Minuten und gibt dir eine Empfehlung.</p>
+    <button class="btn ghost" data-go="booking">Zum Orientierungs-Check</button>
+  </aside>
+  </div>`;
+}
+function firstDateLabel(s){const d=(s.sessions||[]).find(x=>x.date);return d?(s.sessions.length>1?'ab ':'')+fmtDate(d.date):'Termine folgen'}
+function myRec(sid){S.me.seminars=S.me.seminars||{};S.me.seminars[sid]=S.me.seminars[sid]||{};return S.me.seminars[sid]}
+function viewDashboard(sem){
+  const r=(S.me.seminars||{})[sem.id]||{};
+  const sessions=sem.sessions||[];
+  const nx=nextSession(sem);
+  const doneS=sessions.filter(x=>x.done);
+  const allDone=sessions.length&&!nx;
+  const ci=r.checkins||{};
+  const pathHtml=sessions.map((x,i)=>`<li class="${x.done?'done':x===nx?'next':''}"><span class="dot">${x.done?'✓':''}</span><div>
+    <p class="when">${esc(fmtDate(x.date))}${x.time?' · '+esc(x.time):''}${x===nx?' · <b style="color:var(--terra-ink)">Nächster Termin</b>':''}</p>
+    <p class="t">${sessions.length>1?`Termin ${i+1}: `:''}${esc(x.title||'')}</p>
+    ${x.focus?`<p class="muted small">${esc(x.focus)}</p>`:''}</div></li>`).join('');
+  const tasks=[];
+  tasks.push(`<div class="card task"><div class="head"><h3>Selbsteinschätzung vorab</h3>${r.pre?'<span class="pill ok">Erledigt</span>':'<span class="pill open">Offen</span>'}</div>
+    <p>${r.pre?`Ausgefüllt am ${esc(fmtStamp(r.pre.at))}. Du kannst sie jederzeit anpassen.`:'Sieben kurze Fragen, wie es dir gerade geht. Es gibt kein Richtig oder Falsch.'}</p>
+    <button class="btn ${r.pre?'ghost':''}" data-act="open-assess" data-kind="pre">${r.pre?'Ansehen und ändern':'Jetzt einschätzen'}</button></div>`);
+  if(nx){const done=ci[nx.id];
+    tasks.push(`<div class="card task"><div class="head"><h3>Check-In vor dem nächsten Termin</h3>${done?'<span class="pill ok">Erledigt</span>':'<span class="pill open">Offen</span>'}</div>
+    <p>${esc(fmtDate(nx.date))}${nx.title?' · '+esc(nx.title):''}. ${done?'Danke, Nicole weiß, wie du ankommst.':'Wie kommst du an? So kann Nicole den Termin auf die Gruppe abstimmen.'}</p>
+    <button class="btn ${done?'ghost':''}" data-act="open-checkin" data-sess="${esc(nx.id)}">${done?'Check-In ändern':'Check-In starten'}</button></div>`);
+  }
+  if(allDone||r.post){
+    tasks.push(`<div class="card task"><div class="head"><h3>Abschluss-Einschätzung</h3>${r.post?'<span class="pill ok">Erledigt</span>':'<span class="pill open">Offen</span>'}</div>
+    <p>Dieselben Fragen wie zu Beginn. So siehst du, was sich verändert hat.</p>
+    <button class="btn ${r.post?'ghost':''}" data-act="open-assess" data-kind="post">${r.post?'Ansehen und ändern':'Jetzt einschätzen'}</button></div>`);
+  }
+  const practiced=r.practiced||{};
+  const exHtml=doneS.length?doneS.slice().reverse().map(x=>{
+    const exs=(x.exerciseIds||[]).map(exById).filter(Boolean);
+    if(!exs.length)return '';
+    return `<section class="card stack"><div><p class="eyebrow">${esc(fmtDate(x.date))}</p><h3>${esc(x.title||'Termin')}</h3></div><div>${exs.map(e=>exerciseHtml(e,sem.id,!!practiced[e.id])).join('')}</div></section>`;
+  }).join(''):`<div class="empty"><b>Nach jedem Termin erscheinen hier eure Übungen.</b><span>Mit Anleitung zum Nachüben und einem Häkchen, wenn du sie im Alltag ausprobiert hast.</span></div>`;
+  const cmp=r.pre&&r.post?`<section class="stack"><h2>Vorher und nachher</h2><div class="card stack"><div class="legend"><span><i style="background:var(--sand)"></i>Vorab</span><span><i style="background:var(--petrol)"></i>Abschluss</span></div>${barsHtml(r.pre.vals,r.post.vals)}</div></section>`:'';
+  const count=Object.keys(practiced).length;
+  return `<div class="stack-lg">
+  <section class="hero">
+    <p class="eyebrow">${esc(sem.format)}${sem.place?' · '+esc(sem.place):''}</p>
+    <h1>${esc(sem.title)}</h1>
+    ${sem.subtitle?`<p class="lead muted">${esc(sem.subtitle)}</p>`:''}
+    <div class="row between"><p>Hallo ${esc(S.me.name)}.${count?` Du hast schon ${count} ${count===1?'Übung':'Übungen'} im Alltag ausprobiert.`:''}</p><span class="row" style="gap:14px"><button class="link small" data-act="choose">Anderes Seminar</button><button class="link small" data-go="mydata">Meine Daten</button></span></div>
+  </section>
+  <section class="grid2">${tasks.join('')}</section>
+  <section class="stack"><h2>Dein Weg</h2><div class="card"><ol class="path">${pathHtml||'<li><span class="dot"></span><div><p class="muted">Termine folgen.</p></div></li>'}</ol></div></section>
+  <section class="stack"><div class="row between"><h2>Das haben wir geübt</h2></div><p class="care">Alles darf, nichts muss. Wenn sich eine Übung nicht gut anfühlt, hör auf und spür nach.</p>${exHtml}</section>
+  ${cmp}
+  <p class="quote">Präsenz heißt nicht, nach außen perfekt zu wirken. Präsenz heißt, innerlich da zu sein.</p>
+  </div>`;
+}
+function exerciseHtml(e,sid,checked){
+  return `<details class="ex"><summary><span><span class="area">${esc(e.area)}</span><br><span class="nm">${esc(e.title)}</span></span><span class="meta">${e.duration?esc(e.duration)+' Min':''}</span></summary>
+  <div class="body"><p>${esc(e.summary||'')}</p>
+  ${(e.steps||[]).length?`<ol>${e.steps.map(s=>`<li>${esc(s)}</li>`).join('')}</ol>`:''}
+  ${e.why?`<p class="why"><b>Warum das hilft:</b> ${esc(e.why)}</p>`:''}
+  ${sid?`<label class="practice"><input type="checkbox" data-act="practiced" data-sid="${esc(sid)}" data-eid="${esc(e.id)}" ${checked?'checked':''}>Habe ich im Alltag ausprobiert</label>`:''}
+  </div></details>`;
+}
+function barsHtml(a,b){
+  return `<div class="bars">${ITEMS.map(it=>{const x=a?a[it.k]:null,y=b?b[it.k]:null;
+    return `<div class="bar"><span class="lab">${esc(it.s)}</span><span class="track">${x!=null?`<span class="fill pre" style="width:${x*10}%"></span>`:''}${y!=null?`<span class="fill post" style="width:${y*10}%"></span>`:''}</span><span class="v">${n1(x)}${y!=null?' → '+n1(y):''}</span></div>`}).join('')}</div>`;
+}
+function scaleHtml(id,q,lo,hi,val){
+  return `<div class="scale"><div class="q"><label class="lbl" for="${id}">${esc(q)}</label><output for="${id}" id="${id}-o">${val}</output></div>
+  <input type="range" id="${id}" name="${id}" min="0" max="10" step="1" value="${val}" data-out="${id}-o">
+  <div class="ends"><span>0 · ${esc(lo)}</span><span>10 · ${esc(hi)}</span></div></div>`;
+}
+function zustandHtml(sel){
+  return `<fieldset><legend>Wie geht es deinem Nervensystem gerade?</legend><div class="choices">${ZUSTAND.map(z=>`<label class="choice"><input type="radio" name="zustand" value="${z.k}" ${sel===z.k?'checked':''} required><span><b>${z.t}</b><small>${z.d}</small></span></label>`).join('')}</div></fieldset>`;
+}
+function viewAssess(){
+  const sem=semById(S.me.current);if(!sem)return viewHome();
+  const kind=S.p.kind==='post'?'post':'pre';
+  const old=((S.me.seminars||{})[sem.id]||{})[kind]||{};
+  const v=old.vals||{},t=old.texts||{};
+  const texts=kind==='pre'?[['tragen','Was trägst du gerade besonders?','Beruflich, in der Familie, in dir.'],['ziel','Was soll sich durch das Seminar verändern?',''],['hinweis','Gibt es etwas, das Nicole für die Übungen wissen sollte?','Freiwillig, zum Beispiel Schwindel oder eine Verletzung.']]
+    :[['veraendert','Was hat sich für dich verändert?',''],['mitnehmen','Was nimmst du mit in deinen Alltag?','']];
+  return `<div class="stack-lg"><section class="hero"><p class="eyebrow">${esc(sem.title)}</p><h1>${kind==='pre'?'Selbsteinschätzung vorab':'Abschluss-Einschätzung'}</h1>
+  <p class="lead muted">Schieb die Regler dorthin, wo es sich heute stimmig anfühlt. Es geht nicht darum, gut abzuschneiden, sondern darum, wo du gerade stehst.</p></section>
+  <form id="f-assess" data-kind="${kind}">
+  <fieldset><legend>Wie geht es dir im Moment?</legend>${ITEMS.map(it=>scaleHtml('a-'+it.k,it.q,it.lo,it.hi,v[it.k]??5)).join('')}</fieldset>
+  <fieldset><legend>In deinen Worten</legend>${texts.map(([k,q,h])=>`<div class="stack" style="gap:6px"><label class="lbl" for="t-${k}">${q}</label>${h?`<span class="hint">${h}</span>`:''}<textarea id="t-${k}" name="t-${k}">${esc(t[k]||'')}</textarea></div>`).join('')}</fieldset>
+  <p class="hint">Deine Antworten sieht nur Nicole. Sie nutzt sie, um das Seminar auf die Gruppe abzustimmen.</p>
+  <div class="form-actions"><button class="btn" type="submit">Speichern</button><button class="btn ghost" type="button" data-go="home">Abbrechen</button></div>
+  </form></div>`;
+}
+function viewCheckin(){
+  const sem=semById(S.me.current);if(!sem)return viewHome();
+  const sess=(sem.sessions||[]).find(x=>x.id===S.p.sess);if(!sess)return viewHome();
+  const old=(((S.me.seminars||{})[sem.id]||{}).checkins||{})[sess.id]||{};
+  const exs=[...new Set((sem.sessions||[]).filter(x=>x.done).flatMap(x=>x.exerciseIds||[]))].map(exById).filter(Boolean);
+  const geuebt=old.geuebt||[];
+  return `<div class="stack-lg"><section class="hero"><p class="eyebrow">Check-In · ${esc(fmtDate(sess.date))}</p><h1>Wie kommst du an?</h1>
+  <p class="lead muted">Nimm dir einen Atemzug Zeit, bevor du antwortest. Spür kurz deine Füße auf dem Boden.</p></section>
+  <form id="f-checkin" data-sess="${esc(sess.id)}">
+  ${zustandHtml(old.zustand)}
+  <fieldset><legend>Ein kurzer Blick nach innen</legend>
+  ${scaleHtml('c-anspannung','Wie angespannt bist du gerade?','ganz entspannt','sehr angespannt',old.anspannung??5)}
+  ${scaleHtml('c-energie','Wie viel Energie hast du?','kaum','viel',old.energie??5)}</fieldset>
+  ${exs.length?`<fieldset><legend>Was hast du seit dem letzten Mal ausprobiert?</legend><div class="chips">${exs.map(e=>`<label class="chip"><input type="checkbox" name="geuebt" value="${esc(e.id)}" ${geuebt.includes(e.id)?'checked':''}><span>${esc(e.title)}</span></label>`).join('')}</div><span class="hint">Nichts ausprobiert ist auch in Ordnung.</span></fieldset>`:''}
+  <fieldset><legend>In deinen Worten</legend>
+  <div class="stack" style="gap:6px"><label class="lbl" for="c-aufgefallen">Was ist dir seit dem letzten Mal aufgefallen?</label><textarea id="c-aufgefallen" name="c-aufgefallen">${esc(old.aufgefallen||'')}</textarea></div>
+  <div class="stack" style="gap:6px"><label class="lbl" for="c-heute">Was brauchst du heute?</label><textarea id="c-heute" name="c-heute">${esc(old.heute||'')}</textarea></div></fieldset>
+  <div class="form-actions"><button class="btn" type="submit">Check-In abschicken</button><button class="btn ghost" type="button" data-go="home">Abbrechen</button></div>
+  </form></div>`;
+}
+
+/* ---------- Vor der Buchung ---------- */
+function viewBooking(){
+  return `<div class="stack-lg"><section class="hero"><p class="eyebrow">Orientierungs-Check</p><h1>Welches Format passt gerade zu dir?</h1>
+  <p class="lead muted">Zwei Minuten, fünf Fragen. Am Ende bekommst du eine Empfehlung, ob ein Workshop, das Training oder ein persönliches Gespräch der passende Einstieg ist.</p></section>
+  <form id="f-booking">
+  <fieldset><label class="lbl" for="b-name">Wie darf ich dich nennen?</label><span class="hint">Freiwillig. Mit Namen kann Nicole deine Antworten später zuordnen.</span><input type="text" id="b-name" name="b-name" value="${esc(S.me.name||'')}" placeholder="Dein Vorname"></fieldset>
+  <fieldset><label class="lbl" for="b-email">E-Mail-Adresse</label><span class="hint">Freiwillig. Nur wenn Nicole sich mit einem Vorschlag bei dir melden darf.</span><input type="email" id="b-email" name="b-email" value="${esc(S.user&&S.user.email||'')}" placeholder="name@beispiel.de"></fieldset>
+  ${zustandHtml('')}
+  <fieldset><legend>In den letzten Wochen</legend>
+  ${scaleHtml('b-ruhe',ITEMS[0].q,ITEMS[0].lo,ITEMS[0].hi,5)}
+  ${scaleHtml('b-spueren',ITEMS[1].q,ITEMS[1].lo,ITEMS[1].hi,5)}
+  ${scaleHtml('b-raum',ITEMS[2].q,ITEMS[2].lo,ITEMS[2].hi,5)}</fieldset>
+  <fieldset><legend>Was suchst du gerade?</legend><div class="choices">${WUNSCH.map(w=>`<label class="choice"><input type="radio" name="wunsch" value="${w.k}" required><span><b>${w.t}</b><small>${w.d}</small></span></label>`).join('')}</div></fieldset>
+  <fieldset><legend>Wie viel Zeit hast du in den nächsten Wochen?</legend><div class="choices">${ZEIT.map(z=>`<label class="choice"><input type="radio" name="zeit" value="${z.k}" required><span><b>${z.t}</b></span></label>`).join('')}</div></fieldset>
+  <label class="practice" style="align-items:flex-start"><input type="checkbox" id="b-consent" name="b-consent" required style="margin-top:3px"><span>Ich bin einverstanden, dass meine Antworten gespeichert werden und Nicole Ohlemüller sie einsehen kann. <a href="${DATENSCHUTZ}" target="_blank" rel="noopener">Datenschutzerklärung</a></span></label>
+  <div class="form-actions"><button class="btn" type="submit">Empfehlung anzeigen</button></div>
+  </form></div>`;
+}
+function recommend(b){
+  let w=WUNSCH.find(x=>x.k===b.wunsch)||WUNSCH[3];
+  let fmt=w.f;
+  if(b.wunsch==='ueben'&&b.zeit==='abend')fmt='Workshop';
+  const sems=visibleSems().filter(s=>s.format===fmt);
+  const low=avg([b.vals.ruhe,b.vals.spueren,b.vals.raum]);
+  return {fmt,semIds:sems.map(s=>s.id),talk:fmt==='Mentoring'||b.zustand==='leer'||(low!=null&&low<=3)};
+}
+function viewBookingResult(){
+  const b=S.p.b;if(!b)return viewBooking();
+  const rec=b.rec;const sems=rec.semIds.map(semById).filter(Boolean);
+  const intro={Workshop:'Ein Abend als Einstieg passt gut zu dir: erst mal verstehen, was in deinem Körper passiert, und erste Übungen erleben.',Training:'Du möchtest dranbleiben. Das mehrwöchige Training gibt dir Zeit, Übungen im Alltag auszuprobieren und in der Gruppe zu vertiefen.',Mentoring:'Du suchst einen Raum für deine ganz eigene Situation. Dafür ist ein persönliches Gespräch der beste Anfang.'}[rec.fmt]||'';
+  return `<div class="stack-lg"><section class="hero"><p class="eyebrow">Deine Empfehlung</p><h1>${rec.fmt==='Mentoring'?'Ein persönliches Gespräch':rec.fmt==='Training'?'Das Neurobalance Training':'Ein Workshop zum Einstieg'}</h1>
+  <p class="lead">${esc(intro)}</p></section>
+  ${sems.length?`<section class="grid2">${sems.map(s=>`<div class="card task"><div class="head"><h3>${esc(s.title)}</h3><span class="pill">${esc(s.format)}</span></div><p>${esc(s.subtitle||'')}</p><p class="small muted">${esc(firstDateLabel(s))}${s.place?' · '+esc(s.place):''}${s.price?' · '+esc(s.price):''}</p>${s.link?`<a class="btn" href="${esc(s.link)}" target="_blank" rel="noopener">Mehr erfahren und buchen</a>`:''}</div>`).join('')}</section>`:''}
+  ${rec.talk?`<div class="card stack"><h3>Lass uns sprechen</h3><p class="muted">${b.zustand==='leer'?'Wenn du gerade sehr erschöpft bist, fang klein an. ':''}In einem kostenfreien Strategiegespräch schaut Nicole mit dir auf deine Situation und darauf, welcher Rahmen dir jetzt guttut.</p><a class="btn terra" href="${CALENDLY}" target="_blank" rel="noopener">Strategiegespräch anfragen</a></div>`:''}
+  <p class="quote">Du musst nicht erst zusammenbrechen, damit dein Leben wieder mehr nach dir aussehen darf.</p>
+  <div class="row"><button class="btn ghost" data-go="booking">Check neu starten</button><button class="btn ghost" data-go="home">Zu meinem Seminar</button></div></div>`;
+}
+
+/* ---------- Admin ---------- */
+function viewAdmin(){
+  const tabs=[['seminare','Seminare'],['uebungen','Übungen'],['auswertung','Auswertung'],['buchung','Vor der Buchung']];
+  let body='';
+  if(S.atab==='seminare')body=adminSeminare();
+  else if(S.atab==='uebungen')body=adminUebungen();
+  else if(S.atab==='auswertung')body=adminAuswertung();
+  else body=adminBuchung();
+  return `<div class="stack-lg"><section class="hero"><p class="eyebrow">Admin</p><h1>Seminare und Übungen</h1>${S.mode==='local'?'<p class="muted">Im Demo-Modus kannst du alles ausprobieren. Änderungen bleiben in diesem Browser.</p>':''}</section>
+  <div class="subtabs" role="tablist">${tabs.map(([k,t])=>`<button role="tab" aria-selected="${S.atab===k}" data-act="atab" data-tab="${k}">${t}</button>`).join('')}</div>${body}</div>`;
+}
+function countParticipants(sid){return allResponses().filter(r=>r.seminars&&r.seminars[sid]).length}
+function adminSeminare(){
+  const sems=sortedSems();
+  return `<div class="stack"><div class="row between"><p class="muted">Freigeschaltete Seminare (Buchbar, Läuft) sehen Teilnehmerinnen bei der Auswahl.</p><button class="btn" data-act="new-sem">Neues Seminar</button></div>
+  <div class="card list">${sems.length?sems.map(s=>{const n=(s.sessions||[]).length,d=(s.sessions||[]).filter(x=>x.done).length;
+   return `<div class="item"><div class="info"><p class="t">${esc(s.title)}</p><p class="small muted">${esc(s.format)} · ${esc(firstDateLabel(s))} · ${d} von ${n} ${n===1?'Termin':'Terminen'} durchgeführt · ${countParticipants(s.id)} Teilnehmerinnen</p></div>
+   <div class="row"><span class="pill ${s.status==='entwurf'?'draft':s.status==='offen'?'open':s.status==='abgeschlossen'?'ok':''}">${STATUS[s.status]||s.status}</span><button class="btn sm ghost" data-act="dup-sem" data-id="${esc(s.id)}">Duplizieren</button><button class="btn sm" data-act="edit-sem" data-id="${esc(s.id)}">Bearbeiten</button></div></div>`}).join('')
+   :`<div class="empty"><b>Noch keine Seminare angelegt.</b><span>Leg mit „Neues Seminar“ das erste an${S.mode==='fb'&&!S.exercises.length?' oder spiel die vorbereiteten Startinhalte ein (Neurobalance Training, Der innere Bodyguard, drei Platzhalter und 14 Übungen)':''}.</span>${S.mode==='fb'&&!S.exercises.length?'<button class="btn" data-act="seed" style="align-self:flex-start">Startinhalte einspielen</button>':''}</div>`}</div></div>`;
+}
+function exChips(i,sel){
+  return AREAS.map(a=>{const list=S.exercises.filter(e=>e.area===a);if(!list.length)return '';
+   return `<div class="stack" style="gap:6px"><span class="area">${a}</span><div class="chips">${list.map(e=>`<label class="chip"><input type="checkbox" name="s-ex-${i}" value="${esc(e.id)}" ${sel.includes(e.id)?'checked':''}><span>${esc(e.title)}</span></label>`).join('')}</div></div>`}).join('')
+   +(S.exercises.filter(e=>!AREAS.includes(e.area)).length?`<div class="chips">${S.exercises.filter(e=>!AREAS.includes(e.area)).map(e=>`<label class="chip"><input type="checkbox" name="s-ex-${i}" value="${esc(e.id)}" ${sel.includes(e.id)?'checked':''}><span>${esc(e.title)}</span></label>`).join('')}</div>`:'');
+}
+function viewSemEdit(){
+  const s=S.editing;if(!s)return viewAdmin();
+  const isNew=!semById(s.id);
+  return `<div class="stack-lg"><section class="hero"><p class="eyebrow">Admin · Seminar</p><h1>${isNew?'Neues Seminar':esc(s.title||'Seminar')}</h1></section>
+  <form id="f-sem">
+  <fieldset><legend>Grunddaten</legend>
+   <div class="two"><div><label class="lbl" for="sem-title">Titel</label><input type="text" id="sem-title" value="${esc(s.title)}" required></div>
+   <div><label class="lbl" for="sem-format">Format</label><select id="sem-format">${FORMATS.map(f=>`<option ${s.format===f?'selected':''}>${f}</option>`).join('')}</select></div></div>
+   <div class="stack" style="gap:6px"><label class="lbl" for="sem-subtitle">Untertitel</label><input type="text" id="sem-subtitle" value="${esc(s.subtitle)}"></div>
+   <div class="two"><div><label class="lbl" for="sem-status">Status</label><select id="sem-status">${Object.entries(STATUS).map(([k,t])=>`<option value="${k}" ${s.status===k?'selected':''}>${t}</option>`).join('')}</select><span class="hint">Nur „Buchbar“ und „Läuft“ sind für Teilnehmerinnen sichtbar.</span></div>
+   <div><label class="lbl" for="sem-order">Reihenfolge</label><input type="number" id="sem-order" value="${esc(s.order??'')}" min="0"></div></div>
+   <div class="two"><div><label class="lbl" for="sem-place">Ort</label><input type="text" id="sem-place" value="${esc(s.place)}"></div>
+   <div><label class="lbl" for="sem-price">Preis</label><input type="text" id="sem-price" value="${esc(s.price)}" placeholder="z. B. 59 Euro"></div></div>
+   <div class="stack" style="gap:6px"><label class="lbl" for="sem-link">Link zur Buchungsseite</label><input type="url" id="sem-link" value="${esc(s.link)}" placeholder="https://"></div>
+   <div class="stack" style="gap:6px"><label class="lbl" for="sem-desc">Beschreibung</label><textarea id="sem-desc">${esc(s.description)}</textarea></div>
+  </fieldset>
+  <fieldset><legend>Termine und angezeigte Übungen</legend>
+  <p class="hint">Hake an, welche Übungen zu einem Termin gehören. Sichtbar werden sie für Teilnehmerinnen, sobald der Termin als durchgeführt markiert ist.</p>
+  ${(s.sessions||[]).map((x,i)=>`<div class="sess"><div class="row"><b>Termin ${i+1}</b><button type="button" class="link small" data-act="rm-sess" data-i="${i}">Termin entfernen</button></div>
+   <div class="two"><div><label class="lbl" for="s-date-${i}">Datum</label><input type="date" id="s-date-${i}" value="${esc(x.date)}"></div><div><label class="lbl" for="s-time-${i}">Uhrzeit</label><input type="text" id="s-time-${i}" value="${esc(x.time)}" placeholder="18:30–20:30"></div></div>
+   <div class="stack" style="gap:6px"><label class="lbl" for="s-title-${i}">Titel</label><input type="text" id="s-title-${i}" value="${esc(x.title)}"></div>
+   <div class="stack" style="gap:6px"><label class="lbl" for="s-focus-${i}">Schwerpunkt</label><input type="text" id="s-focus-${i}" value="${esc(x.focus)}"></div>
+   <label class="practice"><input type="checkbox" id="s-done-${i}" ${x.done?'checked':''}>Durchgeführt: Übungen für Teilnehmerinnen anzeigen</label>
+   ${exChips(i,x.exerciseIds||[])}</div>`).join('')}
+  <button type="button" class="btn ghost sm" data-act="add-sess" style="align-self:flex-start">Termin hinzufügen</button>
+  </fieldset>
+  <div class="form-actions"><button class="btn" type="submit">Speichern</button><button class="btn ghost" type="button" data-act="cancel-edit">Abbrechen</button>${isNew?'':`<button class="btn danger" type="button" data-act="del-ask">Löschen</button>`}</div>
+  ${S.delAsk?`<div class="confirm"><span>Seminar „${esc(s.title)}“ wirklich löschen? Einträge der Teilnehmerinnen bleiben erhalten.</span><button type="button" class="btn sm danger" data-act="del-sem">Ja, löschen</button><button type="button" class="btn sm ghost" data-act="del-no">Behalten</button></div>`:''}
+  </form></div>`;
+}
+function readSemForm(){
+  const s=S.editing,v=id=>{const el=document.getElementById(id);return el?el.value.trim():''};
+  s.title=v('sem-title');s.format=v('sem-format');s.subtitle=v('sem-subtitle');s.status=v('sem-status');
+  const o=v('sem-order');s.order=o===''?99:Number(o);s.place=v('sem-place');s.price=v('sem-price');s.link=v('sem-link');s.description=v('sem-desc');
+  s.sessions=(s.sessions||[]).map((x,i)=>({...x,date:v('s-date-'+i),time:v('s-time-'+i),title:v('s-title-'+i),focus:v('s-focus-'+i),
+    done:!!(document.getElementById('s-done-'+i)||{}).checked,
+    exerciseIds:[...document.querySelectorAll(`input[name="s-ex-${i}"]:checked`)].map(c=>c.value)}));
+}
+function adminUebungen(){
+  return `<div class="stack"><div class="row between"><p class="muted">Deine Übungsbibliothek. Welche davon Teilnehmerinnen sehen, legst du pro Termin im Seminar fest.</p><button class="btn" data-act="new-ex">Neue Übung</button></div>
+  ${[...AREAS,'Sonstiges'].map(a=>{const list=S.exercises.filter(e=>a==='Sonstiges'?!AREAS.includes(e.area):e.area===a);if(!list.length)return '';
+   return `<section class="card stack"><h3>${a}</h3><div class="list">${list.map(e=>`<div class="item"><div class="info"><p class="t">${esc(e.title)}</p><p class="small muted">${e.duration?esc(e.duration)+' Min · ':''}${esc(e.summary||'')}</p></div><button class="btn sm" data-act="edit-ex" data-id="${esc(e.id)}">Bearbeiten</button></div>`).join('')}</div></section>`}).join('')||`<div class="empty"><b>Noch keine Übungen angelegt.</b><span>Leg mit „Neue Übung“ die erste an.</span></div>`}</div>`;
+}
+function viewExEdit(){
+  const e=S.editing;if(!e)return viewAdmin();
+  const isNew=!exById(e.id);
+  return `<div class="stack-lg"><section class="hero"><p class="eyebrow">Admin · Übung</p><h1>${isNew?'Neue Übung':esc(e.title)}</h1></section>
+  <form id="f-ex"><fieldset>
+  <div class="two"><div><label class="lbl" for="e-title">Titel</label><input type="text" id="e-title" value="${esc(e.title)}" required></div>
+  <div><label class="lbl" for="e-area">Bereich</label><select id="e-area">${AREAS.map(a=>`<option ${e.area===a?'selected':''}>${a}</option>`).join('')}</select></div></div>
+  <div class="two"><div><label class="lbl" for="e-dur">Dauer in Minuten</label><input type="number" id="e-dur" min="0" value="${esc(e.duration??'')}"></div><div></div></div>
+  <div class="stack" style="gap:6px"><label class="lbl" for="e-summary">Kurzbeschreibung</label><input type="text" id="e-summary" value="${esc(e.summary)}"></div>
+  <div class="stack" style="gap:6px"><label class="lbl" for="e-steps">Anleitung</label><span class="hint">Ein Schritt pro Zeile.</span><textarea id="e-steps" style="min-height:150px">${esc((e.steps||[]).join('\n'))}</textarea></div>
+  <div class="stack" style="gap:6px"><label class="lbl" for="e-why">Warum das hilft</label><textarea id="e-why">${esc(e.why)}</textarea></div>
+  </fieldset>
+  <div class="form-actions"><button class="btn" type="submit">Speichern</button><button class="btn ghost" type="button" data-act="cancel-edit">Abbrechen</button>${isNew?'':`<button class="btn danger" type="button" data-act="del-ask">Löschen</button>`}</div>
+  ${S.delAsk?`<div class="confirm"><span>Übung „${esc(e.title)}“ wirklich löschen? Sie verschwindet auch aus allen Terminen.</span><button type="button" class="btn sm danger" data-act="del-ex">Ja, löschen</button><button type="button" class="btn sm ghost" data-act="del-no">Behalten</button></div>`:''}
+  </form></div>`;
+}
+function spark(vals){
+  const pts=vals.filter(v=>v!=null);if(pts.length<1)return '';
+  const w=120,h=28,step=pts.length>1?w/(pts.length-1):0;
+  const xy=pts.map((v,i)=>[pts.length>1?i*step:w/2,h-3-(v/10)*(h-6)]);
+  return `<svg class="spark" width="${w}" height="${h}" viewBox="-4 0 ${w+8} ${h}" aria-label="Anspannung: ${pts.join(', ')}"><polyline points="${xy.map(p=>p.join(',')).join(' ')}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>${xy.map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="${i===xy.length-1?3:2}" fill="currentColor"/>`).join('')}</svg>`;
+}
+function adminAuswertung(){
+  const sems=sortedSems();
+  if(!S.evalSid||!semById(S.evalSid))S.evalSid=(sems.find(s=>countParticipants(s.id))||sems[0]||{}).id;
+  const sem=semById(S.evalSid);
+  if(!sem)return `<div class="empty"><b>Noch keine Seminare.</b></div>`;
+  const people=allResponses().filter(r=>r.seminars&&r.seminars[sem.id]).sort((a,b)=>String(a.name).localeCompare(b.name));
+  const recs=people.map(p=>p.seminars[sem.id]);
+  const pre=recs.filter(r=>r.pre),post=recs.filter(r=>r.post);
+  const avgVals=list=>{const o={};ITEMS.forEach(it=>{o[it.k]=avg(list.map(r=>r.vals&&r.vals[it.k]).filter(v=>v!=null))});return o};
+  const nx=nextSession(sem);
+  const ciNext=nx?recs.filter(r=>r.checkins&&r.checkins[nx.id]):[];
+  const zCount=k=>ciNext.filter(r=>r.checkins[nx.id].zustand===k).length;
+  return `<div class="stack">
+  <div class="stack" style="gap:6px"><label class="lbl" for="eval-sem">Seminar</label><select id="eval-sem" data-act="eval-sem">${sems.map(s=>`<option value="${esc(s.id)}" ${s.id===sem.id?'selected':''}>${esc(s.title)}</option>`).join('')}</select></div>
+  <div class="stats"><div class="stat"><b>${people.length}</b><span>Teilnehmerinnen</span></div><div class="stat"><b>${pre.length}</b><span>Selbsteinschätzungen vorab</span></div><div class="stat"><b>${nx?ciNext.length:'–'}</b><span>${nx?'Check-Ins für '+esc(fmtDate(nx.date)):'Alle Termine durchgeführt'}</span></div><div class="stat"><b>${post.length}</b><span>Abschluss-Einschätzungen</span></div></div>
+  ${nx&&ciNext.length?`<div class="card stack"><h3>So kommt die Gruppe zum nächsten Termin</h3><div class="row">${ZUSTAND.map(z=>`<span class="pill ${z.k==='strom'?'warn':z.k==='da'?'ok':''}">${z.t}: ${zCount(z.k)}</span>`).join('')}</div><p class="small muted">Ø Anspannung ${n1(avg(ciNext.map(r=>r.checkins[nx.id].anspannung)))} · Ø Energie ${n1(avg(ciNext.map(r=>r.checkins[nx.id].energie)))} (0 bis 10)</p></div>`:''}
+  ${pre.length?`<div class="card stack"><h3>Gruppe im Durchschnitt</h3><div class="legend"><span><i style="background:var(--sand)"></i>Vorab</span>${post.length?'<span><i style="background:var(--petrol)"></i>Abschluss</span>':''}</div>${barsHtml(avgVals(pre.map(r=>r.pre)),post.length?avgVals(post.map(r=>r.post)):null)}</div>`:''}
+  <div class="card">${people.length?people.map(p=>personHtml(p,sem)).join(''):`<div class="empty"><b>Noch keine Teilnehmerinnen in diesem Seminar.</b><span>Sobald jemand das Seminar auswählt und etwas einträgt, erscheint es hier.</span></div>`}</div>
+  </div>`;
+}
+function personHtml(p,sem){
+  const r=p.seminars[sem.id];const ses=sem.sessions||[];
+  const ciList=ses.map(x=>({x,c:(r.checkins||{})[x.id]})).filter(o=>o.c);
+  const zt=k=>(ZUSTAND.find(z=>z.k===k)||{}).t||'–';
+  const pr=Object.keys(r.practiced||{}).map(exById).filter(Boolean).map(e=>e.title);
+  const texts=r.pre&&r.pre.texts||{};
+  return `<details class="person"><summary><span><b>${esc(p.name||'Ohne Namen')}</b><br><span class="small muted">${r.pre?'Vorab ✓':'Vorab offen'} · ${ciList.length} von ${ses.length} Check-Ins${r.post?' · Abschluss ✓':''}</span></span>${spark(ciList.map(o=>o.c.anspannung))}</summary>
+  <div class="body">
+  ${r.pre?`<div class="stack" style="gap:10px"><h3>Selbsteinschätzung</h3>${barsHtml(r.pre.vals,r.post&&r.post.vals)}
+   <dl class="kv">${texts.tragen?`<dt>Trägt gerade</dt><dd>${esc(texts.tragen)}</dd>`:''}${texts.ziel?`<dt>Möchte verändern</dt><dd>${esc(texts.ziel)}</dd>`:''}${texts.hinweis?`<dt>Hinweis für Übungen</dt><dd>${esc(texts.hinweis)}</dd>`:''}
+   ${r.post&&r.post.texts&&r.post.texts.veraendert?`<dt>Hat sich verändert</dt><dd>${esc(r.post.texts.veraendert)}</dd>`:''}${r.post&&r.post.texts&&r.post.texts.mitnehmen?`<dt>Nimmt mit</dt><dd>${esc(r.post.texts.mitnehmen)}</dd>`:''}</dl></div>`:''}
+  ${ciList.length?`<div class="stack" style="gap:10px"><h3>Check-Ins</h3>${ciList.map(({x,c})=>`<dl class="kv"><dt>${esc(fmtDate(x.date))}</dt><dd><b>${esc(zt(c.zustand))}</b> · Anspannung ${n1(c.anspannung)} · Energie ${n1(c.energie)}${c.aufgefallen?`<br>Aufgefallen: ${esc(c.aufgefallen)}`:''}${c.heute?`<br>Braucht heute: ${esc(c.heute)}`:''}</dd></dl>`).join('')}</div>`:''}
+  ${pr.length?`<p class="small"><span class="muted">Im Alltag ausprobiert:</span> ${pr.map(esc).join(', ')}</p>`:''}
+  </div></details>`;
+}
+function adminBuchung(){
+  const rows=allBookings().slice().sort((a,b)=>String(b.at).localeCompare(String(a.at)));
+  const wt=k=>(WUNSCH.find(w=>w.k===k)||{}).t||'–',zt=k=>(ZUSTAND.find(z=>z.k===k)||{}).t||'–';
+  return `<div class="stack"><p class="muted">Antworten aus dem Orientierungs-Check vor der Buchung, neueste zuerst.</p>
+  <div class="card list">${rows.length?rows.map(b=>`<div class="item"><div class="info"><p class="t">${esc(b.name||'Ohne Namen')} <span class="small muted">· ${esc(fmtStamp(b.at))}${b.email?' · '+esc(b.email):''}</span></p>
+   <p class="small muted">${esc(zt(b.zustand))} · sucht: ${esc(wt(b.wunsch))} · Ruhe ${n1(b.vals&&b.vals.ruhe)}, Frühwarnsignale ${n1(b.vals&&b.vals.spueren)}, Raum ${n1(b.vals&&b.vals.raum)}</p></div>
+   <div class="row"><span class="pill">${esc(b.rec&&b.rec.fmt||'')}</span>${b.rec&&b.rec.talk?'<span class="pill open">Gespräch empfohlen</span>':''}</div></div>`).join('')
+   :`<div class="empty"><b>Noch keine Orientierungs-Checks.</b><span>Teile den Bereich „Vor der Buchung“ mit Interessentinnen, dann erscheinen ihre Antworten hier.</span></div>`}</div></div>`;
+}
+
+/* ---------- Ereignisse ---------- */
+document.addEventListener('input',e=>{const t=e.target;if(t.matches('input[type=range][data-out]')){const o=document.getElementById(t.dataset.out);if(o)o.textContent=t.value}});
+document.addEventListener('change',async e=>{
+  const t=e.target;
+  if(t.matches('[data-act="practiced"]')){const r=myRec(t.dataset.sid);r.practiced=r.practiced||{};if(t.checked)r.practiced[t.dataset.eid]=new Date().toISOString();else delete r.practiced[t.dataset.eid];await persistMe();render()}
+  if(t.matches('[data-act="eval-sem"]')){S.evalSid=t.value;render()}
+});
+document.addEventListener('click',async e=>{
+  const g=e.target.closest('[data-go]');
+  if(g){e.preventDefault();go(g.dataset.go);return}
+  const a=e.target.closest('[data-act]');if(!a||a.tagName==='INPUT'||a.tagName==='SELECT')return;
+  const act=a.dataset.act;
+  if(act==='flash-x'){S.flash=null;renderFlash()}
+  else if(act==='logout'){if(FB&&S.auth)await FB.signOut(S.auth);go('home')}
+  else if(act==='login-again')go('login')
+  else if(act==='seed'){a.disabled=true;await seedDefaults()}
+  else if(act==='del-me-ask'){S.delAsk=true;render()}
+  else if(act==='delete-me'){if(await deleteMyData()){S.flash={msg:'Deine Daten sind gelöscht.'};go('home')}}
+  else if(act==='export'){const data=JSON.stringify({exportiertAm:new Date().toISOString(),email:S.user&&S.user.email||'',daten:S.me},null,2);const u=URL.createObjectURL(new Blob([data],{type:'application/json'}));const l=document.createElement('a');l.href=u;l.download='seminarbegleitung-meine-daten.json';document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(u),2000)}
+  else if(act==='choose')go('home',{choose:true});
+  else if(act==='open-assess')go('assess',{kind:a.dataset.kind});
+  else if(act==='open-checkin')go('checkin',{sess:a.dataset.sess});
+  else if(act==='atab'){S.atab=a.dataset.tab;render()}
+  else if(act==='new-sem'){S.editing={id:uid('sem'),title:'',subtitle:'',format:'Workshop',status:'entwurf',place:'',price:'',link:'',description:'',order:S.seminars.length+1,sessions:[{id:uid('t'),date:'',time:'',title:'Termin 1',focus:'',exerciseIds:[],done:false}]};go('sem-edit')}
+  else if(act==='edit-sem'){S.editing=clone(semById(a.dataset.id));go('sem-edit')}
+  else if(act==='dup-sem'){const c=clone(semById(a.dataset.id));c.id=uid('sem');c.title=c.title+' (Kopie)';c.status='entwurf';c.sessions=(c.sessions||[]).map(x=>({...x,id:uid('t'),done:false}));S.editing=c;go('sem-edit')}
+  else if(act==='add-sess'){readSemForm();S.editing.sessions.push({id:uid('t'),date:'',time:'',title:'Termin '+(S.editing.sessions.length+1),focus:'',exerciseIds:[],done:false});render()}
+  else if(act==='rm-sess'){readSemForm();S.editing.sessions.splice(Number(a.dataset.i),1);render()}
+  else if(act==='cancel-edit'){S.editing=null;go('admin')}
+  else if(act==='del-ask'){if(S.view==='sem-edit')readSemForm();else readExForm();S.delAsk=true;render()}
+  else if(act==='del-no'){S.delAsk=false;render()}
+  else if(act==='del-sem'){const t=S.editing.title;if(await delDoc('seminars',S.editing.id)){S.editing=null;S.flash={msg:`„${t}“ gelöscht.`};go('admin')}}
+  else if(act==='del-ex'){const id=S.editing.id,t=S.editing.title;if(await delDoc('exercises',id)){
+      for(const s of S.seminars){if((s.sessions||[]).some(x=>(x.exerciseIds||[]).includes(id))){const c=clone(s);c.sessions.forEach(x=>x.exerciseIds=(x.exerciseIds||[]).filter(i=>i!==id));await saveDoc('seminars',c)}}
+      S.editing=null;S.flash={msg:`„${t}“ gelöscht.`};S.atab='uebungen';go('admin')}}
+  else if(act==='new-ex'){S.editing={id:uid('ex'),title:'',area:AREAS[0],duration:3,summary:'',steps:[],why:''};go('ex-edit')}
+  else if(act==='edit-ex'){S.editing=clone(exById(a.dataset.id));go('ex-edit')}
+});
+function readExForm(){const e=S.editing,v=id=>(document.getElementById(id)||{}).value||'';
+  e.title=v('e-title').trim();e.area=v('e-area');const d=v('e-dur');e.duration=d===''?null:Number(d);e.summary=v('e-summary').trim();
+  e.steps=v('e-steps').split('\n').map(x=>x.trim()).filter(Boolean);e.why=v('e-why').trim()}
+function fd(form,name){return (form.elements[name]||{}).value||''}
+document.addEventListener('submit',async e=>{
+  e.preventDefault();const f=e.target;const btn=f.querySelector('button[type=submit]');if(btn)btn.disabled=true;
+  try{
+  if(f.id==='f-login'){const email=fd(f,'email').trim();try{await sendLink(email);go('login',{sent:email})}catch(e){showFlash(writeErr(e),true)}}
+  else if(f.id==='f-confirm'){await completeLink(fd(f,'email').trim());render()}
+  else if(f.id==='f-join'){const name=fd(f,'name').trim();const sem=(f.querySelector('input[name=sem]:checked')||{}).value;if(!name||!sem)return;
+    S.me.name=name;S.me.current=sem;if(!S.me.consentAt)S.me.consentAt=new Date().toISOString();const r=myRec(sem);r.joinedAt=r.joinedAt||new Date().toISOString();await persistMe();go('home')}
+  else if(f.id==='f-assess'){const kind=f.dataset.kind;const vals={};ITEMS.forEach(it=>vals[it.k]=Number(fd(f,'a-'+it.k)));
+    const texts={};f.querySelectorAll('textarea').forEach(t=>texts[t.name.slice(2)]=t.value.trim());
+    myRec(S.me.current)[kind]={at:new Date().toISOString(),vals,texts};const ok=await persistMe();
+    if(ok){S.flash={msg:kind==='pre'?'Danke. Deine Einschätzung ist gespeichert.':'Danke. Unten siehst du jetzt deinen Vorher-Nachher-Vergleich.'};go('home')}}
+  else if(f.id==='f-checkin'){const z=(f.querySelector('input[name=zustand]:checked')||{}).value;
+    const r=myRec(S.me.current);r.checkins=r.checkins||{};
+    r.checkins[f.dataset.sess]={at:new Date().toISOString(),zustand:z,anspannung:Number(fd(f,'c-anspannung')),energie:Number(fd(f,'c-energie')),
+      geuebt:[...f.querySelectorAll('input[name=geuebt]:checked')].map(c=>c.value),aufgefallen:fd(f,'c-aufgefallen').trim(),heute:fd(f,'c-heute').trim()};
+    const ok=await persistMe();if(ok){S.flash={msg:'Danke für deinen Check-In. Bis bald.'};go('home')}}
+  else if(f.id==='f-booking'){const name=fd(f,'b-name').trim();
+    const b={at:new Date().toISOString(),name,zustand:(f.querySelector('input[name=zustand]:checked')||{}).value,
+      vals:{ruhe:Number(fd(f,'b-ruhe')),spueren:Number(fd(f,'b-spueren')),raum:Number(fd(f,'b-raum'))},
+      wunsch:(f.querySelector('input[name=wunsch]:checked')||{}).value,zeit:(f.querySelector('input[name=zeit]:checked')||{}).value};
+    b.email=fd(f,'b-email').trim();b.rec=recommend(b);
+    if(await saveBooking(b))go('booking-result',{b})}
+  else if(f.id==='f-sem'){readSemForm();if(!S.editing.title){showFlash('Bitte gib dem Seminar einen Titel.',true);return}
+    if(await saveDoc('seminars',clone(S.editing))){S.flash={msg:`„${S.editing.title}“ gespeichert.`};S.editing=null;S.atab='seminare';go('admin')}}
+  else if(f.id==='f-ex'){readExForm();if(!S.editing.title){showFlash('Bitte gib der Übung einen Titel.',true);return}
+    if(await saveDoc('exercises',clone(S.editing))){S.flash={msg:`„${S.editing.title}“ gespeichert.`};S.editing=null;S.atab='uebungen';go('admin')}}
+  }finally{if(btn&&document.body.contains(btn))btn.disabled=false}
+});
+init();
+</script>
+
+</body>
+</html>
