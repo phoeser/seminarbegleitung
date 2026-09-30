@@ -144,7 +144,7 @@ fieldset{border:0;margin:0;padding:0;display:flex;flex-direction:column;gap:10px
 legend{font-family:var(--f-display);font-size:1.1rem;margin-bottom:8px;padding:0}
 label.lbl,.lbl{font-weight:500;font-size:.95rem}
 .hint{font-size:.85rem;color:var(--muted)}
-input[type=text],input[type=email],input[type=date],input[type=number],input[type=url],textarea,select{font:inherit;font-size:1rem;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%}
+input[type=text],input[type=email],input[type=password],input[type=date],input[type=number],input[type=url],textarea,select{font:inherit;font-size:1rem;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%}
 textarea{min-height:88px;resize:vertical}
 input:focus,textarea:focus,select:focus{border-color:var(--petrol);outline:none;box-shadow:0 0 0 3px var(--petrol-soft)}
 .scale{display:flex;flex-direction:column;gap:6px;padding:14px 16px;border-radius:12px;background:var(--surface);border:1px solid var(--line)}
@@ -356,7 +356,7 @@ async function init(){
     S.user=u;S.me={};S.isAdmin=false;S.responses=[];S.bookings=[];
     if(u){
       S.unsubs.push(FB.onSnapshot(FB.doc(S.fs,'responses',u.uid),d=>{if(!pending)S.me=d.exists()?clone(d.data()):{};S.meReady=true;soft()},()=>{S.meReady=true;soft()}));
-      S.isAdmin=ADMINS.includes((u.email||'').toLowerCase());
+      S.isAdmin=!!u.emailVerified&&ADMINS.includes((u.email||'').toLowerCase());
       if(S.isAdmin){
         S.unsubs.push(FB.onSnapshot(FB.collection(S.fs,'responses'),s=>{S.responses=s.docs.map(d=>({...d.data(),id:d.id}));soft()},()=>{}));
         S.unsubs.push(FB.onSnapshot(FB.collection(S.fs,'bookings'),s=>{S.bookings=s.docs.map(d=>({...d.data(),id:d.id}));soft()},()=>{}));
@@ -425,6 +425,16 @@ async function deleteMyData(){
     return true;
   }catch(e){pending=Math.max(0,pending-1);showFlash(writeErr(e),true);return false}
 }
+function authErr(e,how){
+  const c=e&&e.code||'';
+  if(c.includes('invalid-credential')||c.includes('wrong-password')||c.includes('user-not-found'))return 'E-Mail oder Passwort stimmt nicht. Neu hier? Dann tipp auf „Konto anlegen“.';
+  if(c.includes('email-already-in-use'))return 'Für diese E-Mail-Adresse gibt es schon ein Konto. Tipp auf „Anmelden“.';
+  if(c.includes('weak-password'))return 'Das Passwort ist zu kurz. Bitte nimm mindestens 8 Zeichen.';
+  if(c.includes('popup-closed')||c.includes('cancelled-popup'))return 'Die Google-Anmeldung wurde abgebrochen.';
+  if(c.includes('popup-blocked'))return 'Dein Browser hat das Google-Fenster blockiert. Bitte erlaube Pop-ups für diese Seite.';
+  if(c.includes('operation-not-allowed'))return 'Diese Anmeldeart ist gerade nicht freigeschaltet.';
+  return writeErr(e);
+}
 function writeErr(e){
   const c=e&&e.code||'';
   if(c.includes('permission-denied'))return 'Dafür fehlt dir die Berechtigung. Bist du mit der richtigen E-Mail-Adresse angemeldet?';
@@ -489,11 +499,14 @@ function viewLogin(){
     <p class="muted small">Keine Mail da? Schau auch im Spam-Ordner nach.</p></section>
     <div class="row"><button class="btn ghost" data-act="login-again">Andere E-Mail-Adresse verwenden</button></div></div>`;
   return `<div class="stack-lg"><section class="hero"><p class="eyebrow">Deine Seminarbegleitung</p><h1>Schön, dass du da bist.</h1>
-    <p class="lead muted">Hier findest du deine Selbsteinschätzung, die Check-Ins vor jedem Termin und alle Übungen zum Nachüben. Melde dich mit deiner E-Mail-Adresse an. Du brauchst kein Passwort, wir schicken dir einen Link.</p></section>
+    <p class="lead muted">Hier findest du deine Selbsteinschätzung, die Check-Ins vor jedem Termin und alle Übungen zum Nachüben. Melde dich mit deiner E-Mail-Adresse und einem Passwort an. Beim ersten Mal legst du dein Konto an.</p></section>
     <form id="f-login" class="card">
       <fieldset><label class="lbl" for="l-email">Deine E-Mail-Adresse</label>
       <input type="email" id="l-email" name="email" autocomplete="email" required placeholder="name@beispiel.de"></fieldset>
-      <div class="form-actions"><button class="btn" type="submit">Anmelde-Link senden</button></div>
+      <fieldset><label class="lbl" for="l-pass">Passwort</label><span class="hint">Mindestens 8 Zeichen.</span>
+      <input type="password" id="l-pass" name="pass" autocomplete="current-password" required minlength="8"></fieldset>
+      <div class="form-actions"><button class="btn" type="submit" name="how" value="login">Anmelden</button><button class="btn ghost" type="submit" name="how" value="signup">Konto anlegen</button></div>
+      <div class="row" style="gap:18px"><button type="button" class="link small" data-act="google">Mit Google anmelden</button><button type="button" class="link small" data-act="reset">Passwort vergessen?</button><button type="button" class="link small" data-act="send-link">Anmelde-Link per E-Mail</button></div>
     </form>
     <aside class="card quiet stack"><h3>Du überlegst noch, welches Format zu dir passt?</h3>
     <p class="muted">Der Orientierungs-Check dauert zwei Minuten und funktioniert ohne Anmeldung.</p>
@@ -844,6 +857,9 @@ document.addEventListener('click',async e=>{
   if(act==='flash-x'){S.flash=null;renderFlash()}
   else if(act==='logout'){if(FB&&S.auth)await FB.signOut(S.auth);go('home')}
   else if(act==='login-again')go('login')
+  else if(act==='google'){try{await FB.signInWithPopup(S.auth,new FB.GoogleAuthProvider());go('home')}catch(err){showFlash(authErr(err,'google'),true)}}
+  else if(act==='reset'||act==='send-link'){const em=(document.getElementById('l-email')||{}).value||'';if(!em.includes('@')){showFlash('Bitte trag zuerst deine E-Mail-Adresse ein.',true);return}
+    try{if(act==='reset'){await FB.sendPasswordResetEmail(S.auth,em.trim());showFlash('Wir haben dir eine Mail zum Zurücksetzen geschickt. Schau auch im Spam-Ordner nach.')}else{await sendLink(em.trim());go('login',{sent:em.trim()})}}catch(err){showFlash(authErr(err,act),true)}}
   else if(act==='seed'){a.disabled=true;await seedDefaults()}
   else if(act==='del-me-ask'){S.delAsk=true;render()}
   else if(act==='delete-me'){if(await deleteMyData()){S.flash={msg:'Deine Daten sind gelöscht.'};go('home')}}
@@ -874,7 +890,8 @@ function fd(form,name){return (form.elements[name]||{}).value||''}
 document.addEventListener('submit',async e=>{
   e.preventDefault();const f=e.target;const btn=f.querySelector('button[type=submit]');if(btn)btn.disabled=true;
   try{
-  if(f.id==='f-login'){const email=fd(f,'email').trim();try{await sendLink(email);go('login',{sent:email})}catch(e){showFlash(writeErr(e),true)}}
+  if(f.id==='f-login'){const email=fd(f,'email').trim(),pass=fd(f,'pass');const how=(e.submitter&&e.submitter.value)||'login';
+    try{if(how==='signup')await FB.createUserWithEmailAndPassword(S.auth,email,pass);else await FB.signInWithEmailAndPassword(S.auth,email,pass);S.flash=null;go('home')}catch(err){showFlash(authErr(err,how),true)}}
   else if(f.id==='f-confirm'){await completeLink(fd(f,'email').trim());render()}
   else if(f.id==='f-join'){const name=fd(f,'name').trim();const sem=(f.querySelector('input[name=sem]:checked')||{}).value;if(!name||!sem)return;
     S.me.name=name;S.me.current=sem;if(!S.me.consentAt)S.me.consentAt=new Date().toISOString();const r=myRec(sem);r.joinedAt=r.joinedAt||new Date().toISOString();await persistMe();go('home')}
