@@ -10,7 +10,7 @@ service cloud.firestore {
     function isAdmin() {
       return signedIn()
         && request.auth.token.email_verified == true
-        && request.auth.token.email in ['kontakt@nicole-ohlemueller.de', 'phoeser@web.de'];
+        && request.auth.token.email in ['kontakt@nicole-ohlemueller.de', 'phoeser@web.de', 'phoeser@gmail.com'];
     }
 
     // Seminare und Übungen: öffentlich lesbar (für den Orientierungs-Check), nur Admins schreiben.
