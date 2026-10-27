@@ -96,8 +96,8 @@ details .list{margin-top:12px}
     <p class="intro">Beschreib hier in eigenen Worten, was sich auf deiner Webseite ändern soll – Texte, Bilder, Termine, Buttons oder ganze Abschnitte. Du siehst vorher genau, was passiert. Erst nach deiner Freigabe geht es live.</p>
     <ol class="steps">
       <li><b>1 · Wunsch schreiben</b>z. B. „Den Dezember-Termin vom Workshop streichen“</li>
-      <li><b>2 · Vorschlag prüfen</b>meist innerhalb einer Stunde (8–20 Uhr)</li>
-      <li><b>3 · Freigeben</b>wird zur nächsten vollen Stunde umgesetzt</li>
+      <li><b>2 · Vorschlag prüfen</b>kommt meist nach ein paar Minuten</li>
+      <li><b>3 · Freigeben</b>wird direkt danach umgesetzt</li>
     </ol>
   </header>
 
@@ -143,6 +143,7 @@ details .list{margin-top:12px}
 
     <section aria-labelledby="h-arbeit">
       <h2 id="h-arbeit">In Arbeit</h2>
+      <div class="row" id="laufBox" style="margin:-4px 0 12px"><p class="status" id="laufText"></p><button class="ghost" type="button" id="startBtn" hidden>Jetzt bearbeiten lassen</button></div>
       <div class="list" id="listArbeit"></div>
     </section>
 
@@ -159,6 +160,8 @@ details .list{margin-top:12px}
 const FB_V='12.19.0';
 const FB_CFG={apiKey:"AIzaSyA2IQa8xWN5vthlwzz0AUbsXlt3I_fyyb0",authDomain:"seminarbegleitung-41bc3.firebaseapp.com",projectId:"seminarbegleitung-41bc3",storageBucket:"seminarbegleitung-41bc3.firebasestorage.app",messagingSenderId:"617909555890",appId:"1:617909555890:web:f028af9c5b9fc39bd9efab"};
 const KEY='nicole-webwuensche-pw';
+/* Make-Webhook, der die geplante Aufgabe startet (prüft das Passwort serverseitig) */
+const START_URL='';
 const SEITEN={neurobalance:'Neurobalance Training',workshop:'Workshop „Der innere Bodyguard“',home:'Startseite',andere:'Andere Seite'};
 const STATUS={neu:'Vorschlag folgt',vorschlag:'Bitte prüfen',rueckfrage:'Rückfrage',freigegeben:'Freigegeben – wird umgesetzt',braucht_paul:'Paul übernimmt',umgesetzt:'Live',verworfen:'Verworfen'};
 
@@ -168,7 +171,7 @@ const fmt=iso=>{try{return new Date(iso).toLocaleString('de-DE',{day:'2-digit',m
 const ls={get:k=>{try{return localStorage.getItem(k)}catch{return null}},set:(k,v)=>{try{v==null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch{}}};
 const el=(t,p={},...kids)=>{const e=document.createElement(t);for(const[k,v]of Object.entries(p)){if(k==='class')e.className=v;else if(k==='text')e.textContent=v;else if(k.startsWith('on'))e.addEventListener(k.slice(2),v);else if(v!==false&&v!=null)e.setAttribute(k,v)}for(const k of kids)if(k!=null)e.append(k);return e};
 
-let FB,fs,st,pw=null,unsub=null,items=[];
+let FB,fs,st,pw=null,unsub=null,unsubLauf=null,items=[],lauf={};
 
 async function boot(){
   const base='https://www.gstatic.com/firebasejs/'+FB_V+'/';
@@ -188,6 +191,8 @@ async function login(p,silent){
     pw=p;ls.set(KEY,p);
     $('#loginBox').hidden=true;$('#app').hidden=false;
     if(unsub)unsub();
+    if(unsubLauf)unsubLauf();
+    unsubLauf=FB.onSnapshot(FB.doc(fs,'webwuensche',pw,'status','lauf'),d=>{lauf=d.exists()?d.data():{};renderLauf()},()=>{});
     unsub=FB.onSnapshot(FB.query(col(),FB.orderBy('erstelltAm','desc'),FB.limit(200)),s=>{items=s.docs.map(d=>({id:d.id,...d.data()}));render()},()=>flash('Die Verbindung ist unterbrochen. Lade die Seite bitte neu.',true));
   }catch(e){
     ls.set(KEY,null);$('#loginBox').hidden=false;$('#app').hidden=true;
@@ -221,7 +226,8 @@ $('#wishForm').addEventListener('submit',async e=>{
     }
     await FB.setDoc(ref,{seite:$('#seite').value,wunsch:text,bilder,status:'neu',erstelltAm:now(),aktualisiertAm:now()});
     $('#wunsch').value='';$('#bilder').value='';
-    flash('Gespeichert. Den Vorschlag siehst du meist innerhalb einer Stunde hier (8–20 Uhr).');
+    flash('Gespeichert. Claude macht dir jetzt einen Vorschlag – meist dauert das ein paar Minuten.');
+    anstossen();
   }catch(err){flash('Speichern hat nicht geklappt. Bitte versuch es gleich noch einmal.',true)}
   finally{$('#send').disabled=false}
 });
@@ -252,12 +258,13 @@ function card(w){
     if(v.hinweis)c.append(el('p',{class:'note',text:v.hinweis}));
     const fb=el('div',{hidden:''});
     const ta=el('textarea',{id:'fb-'+w.id,placeholder:'Was soll anders sein?',style:'min-height:70px'});
-    fb.append(ta,el('div',{class:'row',style:'margin-top:8px'},el('button',{class:'ghost',type:'button',text:'Änderungswunsch senden',onclick:async ev=>{const t=ta.value.trim();if(!t)return;ev.target.disabled=true;await upd(w.id,{status:'neu',nachbesserung:t})}})));
+    fb.append(ta,el('div',{class:'row',style:'margin-top:8px'},el('button',{class:'ghost',type:'button',text:'Änderungswunsch senden',onclick:async ev=>{const t=ta.value.trim();if(!t)return;ev.target.disabled=true;await upd(w.id,{status:'neu',nachbesserung:t});anstossen()}})));
     c.append(fb);
     c.append(el('div',{class:'row'},
       el('button',{class:'primary',type:'button',text:'Freigeben',onclick:async()=>{
         const neu=ae.map((a,i)=>{const t=document.getElementById('neu-'+w.id+'-'+i);return t?{...a,neu:t.value}:a});
         await upd(w.id,{status:'freigegeben',freigegebenAm:now(),vorschlag:{...v,aenderungen:neu}});
+        anstossen();
       }}),
       el('button',{class:'ghost',type:'button',text:'Anders, bitte',onclick:()=>{fb.hidden=!fb.hidden;if(!fb.hidden)ta.focus()}}),
       el('button',{class:'quiet',type:'button',text:'Verwerfen',onclick:()=>upd(w.id,{status:'verworfen'})})));
@@ -265,17 +272,17 @@ function card(w){
     c.append(el('p',{class:'question',text:w.rueckfrage||'Kannst du den Wunsch noch etwas genauer beschreiben?'}));
     const ta=el('textarea',{id:'ans-'+w.id,placeholder:'Deine Antwort',style:'min-height:70px'});
     c.append(ta,el('div',{class:'row'},
-      el('button',{class:'primary',type:'button',text:'Antwort senden',onclick:async ev=>{const t=ta.value.trim();if(!t)return;ev.target.disabled=true;await upd(w.id,{status:'neu',antwort:t})}}),
+      el('button',{class:'primary',type:'button',text:'Antwort senden',onclick:async ev=>{const t=ta.value.trim();if(!t)return;ev.target.disabled=true;await upd(w.id,{status:'neu',antwort:t});anstossen()}}),
       el('button',{class:'quiet',type:'button',text:'Verwerfen',onclick:()=>upd(w.id,{status:'verworfen'})})));
   }else if(w.status==='freigegeben'){
     ae.forEach((a,i)=>c.append(change(a,false,i)));
-    c.append(el('p',{class:'note',text:'Wird zur nächsten vollen Stunde umgesetzt (8–20 Uhr).'}));
+    c.append(el('p',{class:'note',text:'Wird gerade umgesetzt – meist dauert das ein paar Minuten.'}));
     c.append(el('div',{class:'row'},el('button',{class:'quiet',type:'button',text:'Freigabe zurückziehen',onclick:()=>upd(w.id,{status:'vorschlag'})})));
   }else if(w.status==='braucht_paul'){
     if(v.hinweis)c.append(el('p',{class:'note',text:v.hinweis}));
     c.append(el('p',{class:'note',text:'Hier hat es automatisch nicht geklappt. Paul schaut sich das an und meldet sich bei dir.'}));
   }else if(w.status==='neu'){
-    c.append(el('p',{class:'note',text:'Der Vorschlag kommt zur nächsten vollen Stunde (8–20 Uhr).'}));
+    c.append(el('p',{class:'note',text:'Claude formuliert gerade einen Vorschlag – meist dauert das ein paar Minuten.'}));
   }else if(w.status==='umgesetzt'){
     ae.forEach((a,i)=>c.append(change(a,false,i)));
     const e=w.ergebnis||{};
@@ -283,10 +290,32 @@ function card(w){
     if(e.url)p.append(el('a',{href:e.url,target:'_blank',rel:'noopener',text:'Seite ansehen'}));
     c.append(p);
   }else if(w.status==='verworfen'){
-    c.append(el('div',{class:'row'},el('button',{class:'quiet',type:'button',text:'Wieder aufnehmen',onclick:()=>upd(w.id,{status:'neu'})})));
+    c.append(el('div',{class:'row'},el('button',{class:'quiet',type:'button',text:'Wieder aufnehmen',onclick:async()=>{await upd(w.id,{status:'neu'});anstossen()}})));
   }
   return c;
 }
+
+const MIN=60*1000;
+function laeuft(){const t=Date.parse(lauf.seit||'');return lauf.zustand==='laeuft'&&t&&Date.now()-t<30*MIN}
+function angefordert(){const t=Date.parse(lauf.angefordertAm||'');return t&&Date.now()-t<10*MIN&&!(Date.parse(lauf.seit||'')>t)}
+async function anstossen(){
+  if(!pw)return;
+  if(laeuft())return; // läuft schon – die laufende Bearbeitung nimmt neue Wünsche mit
+  try{await FB.setDoc(FB.doc(fs,'webwuensche',pw,'status','lauf'),{angefordertAm:now()},{merge:true})}catch(e){}
+  if(!START_URL)return;
+  try{await fetch(START_URL,{method:'POST',mode:'no-cors',body:new URLSearchParams({pw})})}catch(e){}
+}
+function renderLauf(){
+  const offen=items.some(w=>['neu','freigegeben'].includes(w.status));
+  const t=$('#laufText');
+  if(laeuft())t.textContent='Claude arbeitet gerade an deinen Wünschen (seit '+fmt(lauf.seit).split(', ').pop()+' Uhr).';
+  else if(angefordert())t.textContent='Claude wird gestartet …';
+  else if(offen)t.textContent='Es liegen offene Wünsche bereit.';
+  else t.textContent=lauf.ende?'Zuletzt bearbeitet: '+fmt(lauf.ende)+' Uhr.':'';
+  $('#startBtn').hidden=!(offen&&!laeuft()&&!angefordert());
+}
+$('#startBtn').addEventListener('click',()=>{anstossen();setTimeout(renderLauf,300)});
+setInterval(renderLauf,60*1000);
 function fill(box,arr,empty){box.replaceChildren(...(arr.length?arr.map(card):[el('p',{class:'empty',text:empty})]))}
 function render(){
   const du=items.filter(w=>['vorschlag','rueckfrage'].includes(w.status));
@@ -298,6 +327,7 @@ function render(){
   fill($('#listDone'),dn,'Noch nichts erledigt.');
   $('#cDu').hidden=!du.length;$('#cDu').textContent=du.length;
   $('#cDone').textContent=dn.length?'('+dn.length+')':'';
+  renderLauf();
 }
 boot().catch(()=>{$('#loginStatus').textContent='Die Seite konnte nicht geladen werden. Bitte lade sie neu.';$('#loginStatus').className='status err'});
 </script>
