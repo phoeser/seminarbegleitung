@@ -42,5 +42,12 @@ service cloud.firestore {
       allow read, delete: if isAdmin();
       allow update: if false;
     }
+
+    // Webseiten-Wünsche (seminar.nicole-ohlemueller.de/wuensche): Zugriff nur mit dem Passwort als Pfad-Schlüssel.
+    // Das echte Passwort steht nur in der Firebase-Konsole, nicht in dieser öffentlichen Kopie.
+    match /webwuensche/{key}/{rest=**} {
+      allow read, create, update: if key == 'PASSWORT';
+      allow delete: if false;
+    }
   }
 }

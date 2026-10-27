@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Webseiten-Wünsche · Nicole Ohlemüller</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;1,8..60,400&display=swap">
+<style>
+/* Eine ruhige Spalte: Anmeldung → Neuer Wunsch → Wartet auf dich → In Arbeit → Erledigt. Farben wie nicole-ohlemueller.de / Seminar-App */
+:root{
+  color-scheme:light;
+  --bg:hsl(37 45% 94%);--surface:hsl(37 40% 97.5%);--sand:hsl(33 32% 78%);--line:hsl(33 24% 84%);
+  --ink:hsl(40 4% 14%);--muted:hsl(35 8% 38%);--petrol:hsl(190 39% 23%);--petrol-soft:hsl(190 24% 90%);
+  --on-petrol:hsl(37 45% 96%);--terra:hsl(18 43% 51%);--terra-ink:hsl(18 48% 38%);--terra-soft:hsl(18 50% 92%);
+  --ok:hsl(152 30% 32%);--ok-soft:hsl(152 28% 90%);--warn:hsl(36 70% 36%);--warn-soft:hsl(40 70% 90%);
+  --del:hsl(8 50% 38%);--del-soft:hsl(8 55% 93%);
+  --f-display:"Source Serif 4","Iowan Old Style",Georgia,serif;--f-body:"Instrument Sans","Segoe UI",system-ui,sans-serif;--r:14px;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root{
+  --bg:hsl(195 22% 10%);--surface:hsl(195 20% 13.5%);--sand:hsl(33 16% 42%);--line:hsl(195 14% 23%);
+  --ink:hsl(37 30% 90%);--muted:hsl(35 12% 68%);--petrol:hsl(190 36% 64%);--petrol-soft:hsl(190 28% 20%);
+  --on-petrol:hsl(195 30% 10%);--terra:hsl(18 55% 62%);--terra-ink:hsl(18 62% 72%);--terra-soft:hsl(18 30% 20%);
+  --ok:hsl(152 35% 62%);--ok-soft:hsl(152 25% 18%);--warn:hsl(38 70% 64%);--warn-soft:hsl(38 40% 18%);
+  --del:hsl(8 70% 75%);--del-soft:hsl(8 30% 20%);color-scheme:dark}}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 var(--f-body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 64px}
+[hidden]{display:none!important}
+img{max-width:100%}
+.wrap{max-width:700px;margin:0 auto;display:flex;flex-direction:column;gap:30px}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--terra-ink);font-weight:600}
+h1{font-family:var(--f-display);font-weight:600;font-size:clamp(30px,6.5vw,40px);line-height:1.08;margin:8px 0 10px;color:var(--petrol);text-wrap:balance}
+h2{font-family:var(--f-display);font-weight:600;font-size:21px;margin:0 0 12px;color:var(--petrol);display:flex;gap:10px;align-items:center}
+.count{font-family:var(--f-body);font-size:13px;font-weight:600;background:var(--terra);color:#fff;border-radius:999px;padding:1px 9px}
+.intro{color:var(--muted);margin:0;max-width:60ch}
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:18px 0 0;padding:0;list-style:none}
+.steps li{border-top:2px solid var(--sand);padding-top:8px;font-size:13.5px;color:var(--muted);min-width:0}
+.steps b{display:block;color:var(--ink);font-weight:600;font-size:14px}
+@media (max-width:540px){.steps{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:14px}
+label{font-weight:600;font-size:14px;display:block;margin-bottom:6px}
+select,textarea,input[type=text],input[type=password]{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+textarea{min-height:110px;resize:vertical}
+input[type=file]{font:inherit;font-size:14px;max-width:100%}
+:focus-visible{outline:2px solid var(--terra);outline-offset:2px}
+.hint{font-size:13px;color:var(--muted);margin-top:6px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+button{font:inherit;font-weight:600;border-radius:999px;padding:10px 18px;border:1px solid transparent;cursor:pointer}
+.primary{background:var(--petrol);color:var(--on-petrol)}
+.ghost{background:transparent;border-color:var(--line);color:var(--ink)}
+.quiet{background:transparent;color:var(--muted);padding-inline:6px;text-decoration:underline;text-underline-offset:3px}
+button:disabled{opacity:.55;cursor:default}
+.status{font-size:14px;color:var(--muted);margin:0;min-height:1.5em}
+.status.err{color:var(--del)}
+.list{display:flex;flex-direction:column;gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.card.attn{border-color:var(--terra);box-shadow:inset 0 0 0 1px var(--terra)}
+.meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13px;color:var(--muted)}
+.pill{font-size:12px;font-weight:600;border-radius:999px;padding:2px 10px}
+.p-vorschlag,.p-rueckfrage,.p-braucht_paul{background:var(--warn-soft);color:var(--warn)}
+.p-neu,.p-freigegeben{background:var(--petrol-soft);color:var(--petrol)}
+.p-umgesetzt{background:var(--ok-soft);color:var(--ok)}
+.p-verworfen{background:var(--line);color:var(--muted)}
+.wish{font-family:var(--f-display);font-style:italic;font-size:17px;margin:0;overflow-wrap:anywhere}
+.thumbs{display:flex;flex-wrap:wrap;gap:8px}
+.thumbs img{width:88px;height:88px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
+.chg{border-left:3px solid var(--sand);padding-left:12px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.where{font-size:13px;font-weight:600;color:var(--muted)}
+.old{background:var(--del-soft);color:var(--del);text-decoration:line-through;text-decoration-thickness:1px;border-radius:8px;padding:8px 10px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14.5px}
+.new{background:var(--ok-soft);color:var(--ink);border-radius:8px;padding:8px 10px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14.5px}
+.chg textarea{background:var(--ok-soft);border-color:transparent;min-height:70px;font-size:15px}
+.desc{background:var(--petrol-soft);border-radius:8px;padding:8px 10px;font-size:14.5px;white-space:pre-wrap;overflow-wrap:anywhere}
+.note{font-size:14px;color:var(--muted);margin:0}
+.question{background:var(--warn-soft);border-radius:10px;padding:10px 12px;margin:0}
+.result a{color:var(--petrol);font-weight:600}
+.empty{color:var(--muted);font-size:14.5px;border:1px dashed var(--line);border-radius:var(--r);padding:16px;margin:0}
+details>summary{cursor:pointer;font-family:var(--f-display);font-weight:600;font-size:19px;color:var(--petrol);list-style:none;display:flex;gap:8px;align-items:center}
+details>summary::-webkit-details-marker{display:none}
+details>summary::before{content:"›";display:inline-block;transition:transform .15s}
+details[open]>summary::before{transform:rotate(90deg)}
+details .list{margin-top:12px}
+.login{max-width:420px}
+.foot{font-size:13px;color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">nicole-ohlemueller.de</div>
+    <h1>Webseiten-Wünsche</h1>
+    <p class="intro">Beschreib hier in eigenen Worten, was sich auf deiner Webseite ändern soll – Texte, Bilder, Termine, Buttons oder ganze Abschnitte. Du siehst vorher genau, was passiert. Erst nach deiner Freigabe geht es live.</p>
+    <ol class="steps">
+      <li><b>1 · Wunsch schreiben</b>z. B. „Den Dezember-Termin vom Workshop streichen“</li>
+      <li><b>2 · Vorschlag prüfen</b>kommt meist nach ein paar Minuten</li>
+      <li><b>3 · Freigeben</b>wird direkt danach umgesetzt</li>
+    </ol>
+  </header>
+
+  <section id="loginBox" class="panel login" aria-labelledby="h-login">
+    <h2 id="h-login">Anmelden</h2>
+    <form id="loginForm" class="row" style="flex-direction:column;align-items:stretch;gap:12px">
+      <div><label for="pw">Passwort</label><input type="password" id="pw" autocomplete="current-password" required></div>
+      <div class="row"><button class="primary" type="submit" id="loginBtn">Weiter</button><p class="status" id="loginStatus" role="status"></p></div>
+    </form>
+  </section>
+
+  <div id="app" hidden style="display:flex;flex-direction:column;gap:30px">
+    <section aria-labelledby="h-neu">
+      <h2 id="h-neu">Neuer Wunsch</h2>
+      <form class="panel" id="wishForm">
+        <div>
+          <label for="seite">Welche Seite?</label>
+          <select id="seite">
+            <option value="neurobalance">Neurobalance Training</option>
+            <option value="workshop">Workshop „Der innere Bodyguard“</option>
+            <option value="home">Startseite</option>
+            <option value="andere">Andere Seite / neue Seite / weiß nicht genau</option>
+          </select>
+        </div>
+        <div>
+          <label for="wunsch">Was soll sich ändern?</label>
+          <textarea id="wunsch" required placeholder="z. B. Beim Neurobalance Training soll stehen, dass der Januar-Kurs an 6 Dienstagen von 18:30 bis 19:45 Uhr stattfindet."></textarea>
+          <div class="hint">Tipp: Auf dem Handy kannst du über das Mikrofon der Tastatur einfach diktieren.</div>
+        </div>
+        <div>
+          <label for="bilder">Bilder (optional)</label>
+          <input type="file" id="bilder" accept="image/*" multiple>
+          <div class="hint">Zum Beispiel ein neues Foto, das eingebaut werden soll. Schreib oben dazu, wohin.</div>
+        </div>
+        <div class="row"><button class="primary" type="submit" id="send">Wunsch abschicken</button><p class="status" id="formStatus" role="status"></p></div>
+      </form>
+    </section>
+
+    <section aria-labelledby="h-du">
+      <h2 id="h-du">Wartet auf dich <span class="count" id="cDu" hidden></span></h2>
+      <div class="list" id="listDu"></div>
+    </section>
+
+    <section aria-labelledby="h-arbeit">
+      <h2 id="h-arbeit">In Arbeit</h2>
+      <div class="row" id="laufBox" style="margin:-4px 0 12px"><p class="status" id="laufText"></p><button class="ghost" type="button" id="startBtn" hidden>Jetzt bearbeiten lassen</button></div>
+      <div class="list" id="listArbeit"></div>
+    </section>
+
+    <details>
+      <summary>Erledigt <span id="cDone"></span></summary>
+      <div class="list" id="listDone"></div>
+    </details>
+
+    <div class="foot"><span>Fragen? Paul hilft weiter.</span><button class="quiet" type="button" id="logout">Abmelden</button></div>
+  </div>
+</div>
+
+<script type="module">
+const FB_V='12.19.0';
+const FB_CFG={apiKey:"AIzaSyA2IQa8xWN5vthlwzz0AUbsXlt3I_fyyb0",authDomain:"seminarbegleitung-41bc3.firebaseapp.com",projectId:"seminarbegleitung-41bc3",storageBucket:"seminarbegleitung-41bc3.firebasestorage.app",messagingSenderId:"617909555890",appId:"1:617909555890:web:f028af9c5b9fc39bd9efab"};
+const KEY='nicole-webwuensche-pw';
+/* Make-Webhook, der die geplante Aufgabe startet (prüft das Passwort serverseitig) */
+const START_URL='';
+const SEITEN={neurobalance:'Neurobalance Training',workshop:'Workshop „Der innere Bodyguard“',home:'Startseite',andere:'Andere Seite'};
+const STATUS={neu:'Vorschlag folgt',vorschlag:'Bitte prüfen',rueckfrage:'Rückfrage',freigegeben:'Freigegeben – wird umgesetzt',braucht_paul:'Paul übernimmt',umgesetzt:'Live',verworfen:'Verworfen'};
+
+const $=s=>document.querySelector(s);
+const now=()=>new Date().toISOString();
+const fmt=iso=>{try{return new Date(iso).toLocaleString('de-DE',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}catch{return''}};
+const ls={get:k=>{try{return localStorage.getItem(k)}catch{return null}},set:(k,v)=>{try{v==null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch{}}};
+const el=(t,p={},...kids)=>{const e=document.createElement(t);for(const[k,v]of Object.entries(p)){if(k==='class')e.className=v;else if(k==='text')e.textContent=v;else if(k.startsWith('on'))e.addEventListener(k.slice(2),v);else if(v!==false&&v!=null)e.setAttribute(k,v)}for(const k of kids)if(k!=null)e.append(k);return e};
+
+let FB,fs,st,pw=null,unsub=null,unsubLauf=null,items=[],lauf={};
+
+async function boot(){
+  const base='https://www.gstatic.com/firebasejs/'+FB_V+'/';
+  const [a,b,c]=await Promise.all([import(base+'firebase-app.js'),import(base+'firebase-firestore.js'),import(base+'firebase-storage.js')]);
+  FB={...a,...b,...c};
+  const app=FB.initializeApp(FB_CFG);
+  fs=FB.getFirestore(app);st=FB.getStorage(app);
+  const saved=ls.get(KEY);
+  if(saved)login(saved,true);
+}
+const col=()=>FB.collection(fs,'webwuensche',pw,'items');
+
+async function login(p,silent){
+  $('#loginBtn').disabled=true;$('#loginStatus').textContent=silent?'':'Wird geprüft …';$('#loginStatus').className='status';
+  try{
+    await FB.getDocs(FB.query(FB.collection(fs,'webwuensche',p,'items'),FB.limit(1)));
+    pw=p;ls.set(KEY,p);
+    $('#loginBox').hidden=true;$('#app').hidden=false;
+    if(unsub)unsub();
+    if(unsubLauf)unsubLauf();
+    unsubLauf=FB.onSnapshot(FB.doc(fs,'webwuensche',pw,'status','lauf'),d=>{lauf=d.exists()?d.data():{};renderLauf()},()=>{});
+    unsub=FB.onSnapshot(FB.query(col(),FB.orderBy('erstelltAm','desc'),FB.limit(200)),s=>{items=s.docs.map(d=>({id:d.id,...d.data()}));render()},()=>flash('Die Verbindung ist unterbrochen. Lade die Seite bitte neu.',true));
+  }catch(e){
+    ls.set(KEY,null);$('#loginBox').hidden=false;$('#app').hidden=true;
+    $('#loginStatus').textContent=silent?'':'Das Passwort stimmt nicht.';$('#loginStatus').className='status err';
+  }finally{$('#loginBtn').disabled=false}
+}
+$('#loginForm').addEventListener('submit',e=>{e.preventDefault();const p=$('#pw').value.trim();if(p)login(p)});
+$('#logout').addEventListener('click',()=>{ls.set(KEY,null);if(unsub)unsub();pw=null;items=[];$('#app').hidden=true;$('#loginBox').hidden=false;$('#pw').value=''});
+
+function flash(t,err){const s=$('#formStatus');s.textContent=t;s.className='status'+(err?' err':'')}
+async function upd(id,patch){
+  try{await FB.updateDoc(FB.doc(col(),id),{...patch,aktualisiertAm:now()})}
+  catch(e){flash('Das hat nicht geklappt. Bitte lade die Seite neu und versuch es noch einmal.',true)}
+}
+
+$('#wishForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const text=$('#wunsch').value.trim();if(!text||!pw)return;
+  $('#send').disabled=true;flash('Wird gespeichert …');
+  try{
+    const ref=FB.doc(col());
+    const files=[...$('#bilder').files].slice(0,8);
+    const bilder=[];
+    for(const [i,f] of files.entries()){
+      if(f.size>15*1024*1024){flash('„'+f.name+'“ ist größer als 15 MB und wurde weggelassen.',true);continue}
+      flash('Bild '+(i+1)+' von '+files.length+' wird hochgeladen …');
+      const path='webwuensche/'+pw+'/'+ref.id+'/'+Date.now()+'-'+f.name.replace(/[^\w.\-]+/g,'_');
+      const r=FB.ref(st,path);
+      await FB.uploadBytes(r,f,{contentType:f.type||'image/jpeg'});
+      bilder.push({name:f.name,pfad:path,url:await FB.getDownloadURL(r)});
+    }
+    await FB.setDoc(ref,{seite:$('#seite').value,wunsch:text,bilder,status:'neu',erstelltAm:now(),aktualisiertAm:now()});
+    $('#wunsch').value='';$('#bilder').value='';
+    flash('Gespeichert. Claude macht dir jetzt einen Vorschlag – meist dauert das ein paar Minuten.');
+    anstossen();
+  }catch(err){flash('Speichern hat nicht geklappt. Bitte versuch es gleich noch einmal.',true)}
+  finally{$('#send').disabled=false}
+});
+
+function change(a,editable,key){
+  const b=el('div',{class:'chg'});
+  b.append(el('div',{class:'where',text:[SEITEN[a.seite]||a.seite,a.abschnitt].filter(Boolean).join(' · ')}));
+  if(a.art==='text'&&a.alt!=null){
+    b.append(el('div',{class:'old',text:a.alt}));
+    if(editable){const t=el('textarea',{id:'neu-'+key,'aria-label':'Neuer Text'});t.value=a.neu||'';b.append(t)}
+    else b.append(el('div',{class:'new',text:a.neu||''}));
+  }else{
+    b.append(el('div',{class:'desc',text:a.beschreibung||a.neu||''}));
+  }
+  return b;
+}
+
+function card(w){
+  const attn=['vorschlag','rueckfrage'].includes(w.status);
+  const c=el('article',{class:'card'+(attn?' attn':'')});
+  c.append(el('div',{class:'meta'},el('span',{class:'pill p-'+w.status,text:STATUS[w.status]||w.status}),el('span',{text:(SEITEN[w.seite]||w.seite)+' · '+fmt(w.erstelltAm)})));
+  c.append(el('p',{class:'wish',text:'„'+w.wunsch+'“'}));
+  if(Array.isArray(w.bilder)&&w.bilder.length){const t=el('div',{class:'thumbs'});w.bilder.forEach(b=>t.append(el('a',{href:b.url,target:'_blank',rel:'noopener'},el('img',{src:b.url,alt:b.name,loading:'lazy'}))));c.append(t)}
+  const v=w.vorschlag||{};const ae=Array.isArray(v.aenderungen)?v.aenderungen:[];
+
+  if(w.status==='vorschlag'){
+    ae.forEach((a,i)=>c.append(change(a,true,w.id+'-'+i)));
+    if(v.hinweis)c.append(el('p',{class:'note',text:v.hinweis}));
+    const fb=el('div',{hidden:''});
+    const ta=el('textarea',{id:'fb-'+w.id,placeholder:'Was soll anders sein?',style:'min-height:70px'});
+    fb.append(ta,el('div',{class:'row',style:'margin-top:8px'},el('button',{class:'ghost',type:'button',text:'Änderungswunsch senden',onclick:async ev=>{const t=ta.value.trim();if(!t)return;ev.target.disabled=true;await upd(w.id,{status:'neu',nachbesserung:t});anstossen()}})));
+    c.append(fb);
+    c.append(el('div',{class:'row'},
+      el('button',{class:'primary',type:'button',text:'Freigeben',onclick:async()=>{
+        const neu=ae.map((a,i)=>{const t=document.getElementById('neu-'+w.id+'-'+i);return t?{...a,neu:t.value}:a});
+        await upd(w.id,{status:'freigegeben',freigegebenAm:now(),vorschlag:{...v,aenderungen:neu}});
+        anstossen();
+      }}),
+      el('button',{class:'ghost',type:'button',text:'Anders, bitte',onclick:()=>{fb.hidden=!fb.hidden;if(!fb.hidden)ta.focus()}}),
+      el('button',{class:'quiet',type:'button',text:'Verwerfen',onclick:()=>upd(w.id,{status:'verworfen'})})));
+  }else if(w.status==='rueckfrage'){
+    c.append(el('p',{class:'question',text:w.rueckfrage||'Kannst du den Wunsch noch etwas genauer beschreiben?'}));
+    const ta=el('textarea',{id:'ans-'+w.id,placeholder:'Deine Antwort',style:'min-height:70px'});
+    c.append(ta,el('div',{class:'row'},
+      el('button',{class:'primary',type:'button',text:'Antwort senden',onclick:async ev=>{const t=ta.value.trim();if(!t)return;ev.target.disabled=true;await upd(w.id,{status:'neu',antwort:t});anstossen()}}),
+      el('button',{class:'quiet',type:'button',text:'Verwerfen',onclick:()=>upd(w.id,{status:'verworfen'})})));
+  }else if(w.status==='freigegeben'){
+    ae.forEach((a,i)=>c.append(change(a,false,i)));
+    c.append(el('p',{class:'note',text:'Wird gerade umgesetzt – meist dauert das ein paar Minuten.'}));
+    c.append(el('div',{class:'row'},el('button',{class:'quiet',type:'button',text:'Freigabe zurückziehen',onclick:()=>upd(w.id,{status:'vorschlag'})})));
+  }else if(w.status==='braucht_paul'){
+    if(v.hinweis)c.append(el('p',{class:'note',text:v.hinweis}));
+    c.append(el('p',{class:'note',text:'Hier hat es automatisch nicht geklappt. Paul schaut sich das an und meldet sich bei dir.'}));
+  }else if(w.status==='neu'){
+    c.append(el('p',{class:'note',text:'Claude formuliert gerade einen Vorschlag – meist dauert das ein paar Minuten.'}));
+  }else if(w.status==='umgesetzt'){
+    ae.forEach((a,i)=>c.append(change(a,false,i)));
+    const e=w.ergebnis||{};
+    const p=el('p',{class:'note result'},el('span',{text:(e.text||'Ist live auf der Webseite.')+' '}));
+    if(e.url)p.append(el('a',{href:e.url,target:'_blank',rel:'noopener',text:'Seite ansehen'}));
+    c.append(p);
+  }else if(w.status==='verworfen'){
+    c.append(el('div',{class:'row'},el('button',{class:'quiet',type:'button',text:'Wieder aufnehmen',onclick:async()=>{await upd(w.id,{status:'neu'});anstossen()}})));
+  }
+  return c;
+}
+
+const MIN=60*1000;
+function laeuft(){const t=Date.parse(lauf.seit||'');return lauf.zustand==='laeuft'&&t&&Date.now()-t<30*MIN}
+function angefordert(){const t=Date.parse(lauf.angefordertAm||'');return t&&Date.now()-t<10*MIN&&!(Date.parse(lauf.seit||'')>t)}
+async function anstossen(){
+  if(!pw)return;
+  if(laeuft())return; // läuft schon – die laufende Bearbeitung nimmt neue Wünsche mit
+  try{await FB.setDoc(FB.doc(fs,'webwuensche',pw,'status','lauf'),{angefordertAm:now()},{merge:true})}catch(e){}
+  if(!START_URL)return;
+  try{await fetch(START_URL,{method:'POST',mode:'no-cors',body:new URLSearchParams({pw})})}catch(e){}
+}
+function renderLauf(){
+  const offen=items.some(w=>['neu','freigegeben'].includes(w.status));
+  const t=$('#laufText');
+  if(laeuft())t.textContent='Claude arbeitet gerade an deinen Wünschen (seit '+fmt(lauf.seit).split(', ').pop()+' Uhr).';
+  else if(angefordert())t.textContent='Claude wird gestartet …';
+  else if(offen)t.textContent='Es liegen offene Wünsche bereit.';
+  else t.textContent=lauf.ende?'Zuletzt bearbeitet: '+fmt(lauf.ende)+' Uhr.':'';
+  $('#startBtn').hidden=!(offen&&!laeuft()&&!angefordert());
+}
+$('#startBtn').addEventListener('click',()=>{anstossen();setTimeout(renderLauf,300)});
+setInterval(renderLauf,60*1000);
+function fill(box,arr,empty){box.replaceChildren(...(arr.length?arr.map(card):[el('p',{class:'empty',text:empty})]))}
+function render(){
+  const du=items.filter(w=>['vorschlag','rueckfrage'].includes(w.status));
+  const ar=items.filter(w=>['neu','freigegeben','braucht_paul'].includes(w.status));
+  const dn=items.filter(w=>['umgesetzt','verworfen'].includes(w.status));
+  const a=document.activeElement;const typing=b=>a&&b.contains(a)&&/TEXTAREA|INPUT/.test(a.tagName);
+  if(!typing($('#listDu')))fill($('#listDu'),du,'Gerade wartet nichts auf dich. Neue Vorschläge erscheinen hier.');
+  if(!typing($('#listArbeit')))fill($('#listArbeit'),ar,'Nichts in Arbeit.');
+  fill($('#listDone'),dn,'Noch nichts erledigt.');
+  $('#cDu').hidden=!du.length;$('#cDu').textContent=du.length;
+  $('#cDone').textContent=dn.length?'('+dn.length+')':'';
+  renderLauf();
+}
+boot().catch(()=>{$('#loginStatus').textContent='Die Seite konnte nicht geladen werden. Bitte lade sie neu.';$('#loginStatus').className='status err'});
+</script>
+</body>
+</html>
