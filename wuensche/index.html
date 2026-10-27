@@ -96,8 +96,8 @@ details .list{margin-top:12px}
     <p class="intro">Beschreib hier in eigenen Worten, was sich auf deiner Webseite ändern soll – Texte, Bilder, Termine, Buttons oder ganze Abschnitte. Du siehst vorher genau, was passiert. Erst nach deiner Freigabe geht es live.</p>
     <ol class="steps">
       <li><b>1 · Wunsch schreiben</b>z. B. „Den Dezember-Termin vom Workshop streichen“</li>
-      <li><b>2 · Vorschlag prüfen</b>kommt meist nach ein paar Minuten</li>
-      <li><b>3 · Freigeben</b>wird direkt danach umgesetzt</li>
+      <li><b>2 · Vorschlag prüfen</b>kommt beim nächsten Durchlauf (alle 6 Stunden)</li>
+      <li><b>3 · Freigeben</b>geht beim nächsten Durchlauf live</li>
     </ol>
   </header>
 
@@ -143,7 +143,7 @@ details .list{margin-top:12px}
 
     <section aria-labelledby="h-arbeit">
       <h2 id="h-arbeit">In Arbeit</h2>
-      <div class="row" id="laufBox" style="margin:-4px 0 12px"><p class="status" id="laufText"></p><button class="ghost" type="button" id="startBtn" hidden>Jetzt bearbeiten lassen</button></div>
+      <div class="row" id="laufBox" style="margin:-4px 0 12px"><p class="status" id="laufText"></p></div>
       <div class="list" id="listArbeit"></div>
     </section>
 
@@ -226,7 +226,7 @@ $('#wishForm').addEventListener('submit',async e=>{
     }
     await FB.setDoc(ref,{seite:$('#seite').value,wunsch:text,bilder,status:'neu',erstelltAm:now(),aktualisiertAm:now()});
     $('#wunsch').value='';$('#bilder').value='';
-    flash('Gespeichert. Claude macht dir jetzt einen Vorschlag – meist dauert das ein paar Minuten.');
+    flash('Gespeichert. Den Vorschlag siehst du hier nach dem nächsten Durchlauf (um '+naechsterLauf()+' Uhr).');
     anstossen();
   }catch(err){flash('Speichern hat nicht geklappt. Bitte versuch es gleich noch einmal.',true)}
   finally{$('#send').disabled=false}
@@ -276,13 +276,13 @@ function card(w){
       el('button',{class:'quiet',type:'button',text:'Verwerfen',onclick:()=>upd(w.id,{status:'verworfen'})})));
   }else if(w.status==='freigegeben'){
     ae.forEach((a,i)=>c.append(change(a,false,i)));
-    c.append(el('p',{class:'note',text:'Wird gerade umgesetzt – meist dauert das ein paar Minuten.'}));
+    c.append(el('p',{class:'note',text:'Geht beim nächsten Durchlauf live (um '+naechsterLauf()+' Uhr).'}));
     c.append(el('div',{class:'row'},el('button',{class:'quiet',type:'button',text:'Freigabe zurückziehen',onclick:()=>upd(w.id,{status:'vorschlag'})})));
   }else if(w.status==='braucht_paul'){
     if(v.hinweis)c.append(el('p',{class:'note',text:v.hinweis}));
     c.append(el('p',{class:'note',text:'Hier hat es automatisch nicht geklappt. Paul schaut sich das an und meldet sich bei dir.'}));
   }else if(w.status==='neu'){
-    c.append(el('p',{class:'note',text:'Claude formuliert gerade einen Vorschlag – meist dauert das ein paar Minuten.'}));
+    c.append(el('p',{class:'note',text:'Der Vorschlag kommt beim nächsten Durchlauf (um '+naechsterLauf()+' Uhr).'}));
   }else if(w.status==='umgesetzt'){
     ae.forEach((a,i)=>c.append(change(a,false,i)));
     const e=w.ergebnis||{};
@@ -296,6 +296,8 @@ function card(w){
 }
 
 const MIN=60*1000;
+/* Durchläufe der geplanten Aufgabe: täglich 0:47, 6:47, 12:47, 18:47 (Berliner Zeit) */
+function naechsterLauf(){const d=new Date(new Date().toLocaleString('en-US',{timeZone:'Europe/Berlin'}));const h=d.getHours()*60+d.getMinutes();const runs=[47,407,767,1127];const n=runs.find(r=>r>h)??runs[0];return Math.floor(n/60)+':'+String(n%60).padStart(2,'0')}
 function laeuft(){const t=Date.parse(lauf.seit||'');return lauf.zustand==='laeuft'&&t&&Date.now()-t<30*MIN}
 function angefordert(){const t=Date.parse(lauf.angefordertAm||'');return t&&Date.now()-t<10*MIN&&!(Date.parse(lauf.seit||'')>t)}
 async function anstossen(){
@@ -309,12 +311,9 @@ function renderLauf(){
   const offen=items.some(w=>['neu','freigegeben'].includes(w.status));
   const t=$('#laufText');
   if(laeuft())t.textContent='Claude arbeitet gerade an deinen Wünschen (seit '+fmt(lauf.seit).split(', ').pop()+' Uhr).';
-  else if(angefordert())t.textContent='Claude wird gestartet …';
-  else if(offen)t.textContent='Es liegen offene Wünsche bereit.';
+  else if(offen)t.textContent='Nächster Durchlauf um '+naechsterLauf()+' Uhr.';
   else t.textContent=lauf.ende?'Zuletzt bearbeitet: '+fmt(lauf.ende)+' Uhr.':'';
-  $('#startBtn').hidden=!(offen&&!laeuft()&&!angefordert());
 }
-$('#startBtn').addEventListener('click',()=>{anstossen();setTimeout(renderLauf,300)});
 setInterval(renderLauf,60*1000);
 function fill(box,arr,empty){box.replaceChildren(...(arr.length?arr.map(card):[el('p',{class:'empty',text:empty})]))}
 function render(){
