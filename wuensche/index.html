@@ -67,6 +67,10 @@ button:disabled{opacity:.55;cursor:default}
 .p-verworfen{background:var(--line);color:var(--muted)}
 .wish{font-family:var(--f-display);font-style:italic;font-size:17px;margin:0;overflow-wrap:anywhere}
 .thumbs{display:flex;flex-wrap:wrap;gap:8px}
+.prev img{display:block;width:100%;border-radius:10px;border:1px solid var(--line)}
+.dl{display:flex;flex-wrap:wrap;gap:8px}
+.btnl{display:inline-block;text-decoration:none;font-weight:600;font-size:14.5px;border-radius:999px;padding:8px 16px;background:var(--petrol);color:var(--on-petrol)}
+.btnl.ghostl{background:transparent;color:var(--ink);border:1px solid var(--line)}
 .thumbs img{width:88px;height:88px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
 .chg{border-left:3px solid var(--sand);padding-left:12px;display:flex;flex-direction:column;gap:6px;min-width:0}
 .where{font-size:13px;font-weight:600;color:var(--muted)}
@@ -93,7 +97,7 @@ details .list{margin-top:12px}
   <header>
     <div class="eyebrow">nicole-ohlemueller.de</div>
     <h1>Webseiten-Wünsche</h1>
-    <p class="intro">Beschreib hier in eigenen Worten, was sich auf deiner Webseite ändern soll – Texte, Bilder, Termine, Buttons oder ganze Abschnitte. Du siehst vorher genau, was passiert. Erst nach deiner Freigabe geht es live.</p>
+    <p class="intro">Beschreib hier in eigenen Worten, was sich auf deiner Webseite oder an deinen Flyern ändern soll – Texte, Bilder, Termine, Buttons oder ganze Abschnitte. Auch neue Flyer kannst du dir hier wünschen. Du siehst vorher genau, was passiert. Erst nach deiner Freigabe geht es live.</p>
     <ol class="steps">
       <li><b>1 · Wunsch schreiben</b>z. B. „Den Dezember-Termin vom Workshop streichen“</li>
       <li><b>2 · Vorschlag prüfen</b>kommt beim nächsten Durchlauf (alle 6 Stunden)</li>
@@ -114,12 +118,17 @@ details .list{margin-top:12px}
       <h2 id="h-neu">Neuer Wunsch</h2>
       <form class="panel" id="wishForm">
         <div>
-          <label for="seite">Welche Seite?</label>
+          <label for="seite">Worum geht es?</label>
           <select id="seite">
+            <optgroup label="Webseite">
             <option value="neurobalance">Neurobalance Training</option>
             <option value="workshop">Workshop „Der innere Bodyguard“</option>
             <option value="home">Startseite</option>
             <option value="andere">Andere Seite / neue Seite / weiß nicht genau</option>
+            </optgroup>
+            <optgroup label="Flyer" id="flyerOpts">
+            <option value="flyer:neu">Neuer Flyer</option>
+            </optgroup>
           </select>
         </div>
         <div>
@@ -147,6 +156,12 @@ details .list{margin-top:12px}
       <div class="list" id="listArbeit"></div>
     </section>
 
+    <section aria-labelledby="h-flyer">
+      <h2 id="h-flyer">Deine Flyer</h2>
+      <p class="note" style="margin:-4px 0 12px">Immer die aktuelle Fassung: PDF für die Druckerei (mit 3 mm Beschnitt), PNG zum Teilen. Änderungen und neue Flyer wünschst du dir oben über „Worum geht es?“.</p>
+      <div class="list" id="listFlyer"></div>
+    </section>
+
     <details>
       <summary>Erledigt <span id="cDone"></span></summary>
       <div class="list" id="listDone"></div>
@@ -162,7 +177,9 @@ const FB_CFG={apiKey:"AIzaSyA2IQa8xWN5vthlwzz0AUbsXlt3I_fyyb0",authDomain:"semin
 const KEY='nicole-webwuensche-pw';
 /* Make-Webhook, der die geplante Aufgabe startet (prüft das Passwort serverseitig) */
 const START_URL='';
-const SEITEN={neurobalance:'Neurobalance Training',workshop:'Workshop „Der innere Bodyguard“',home:'Startseite',andere:'Andere Seite'};
+const SEITEN={neurobalance:'Neurobalance Training',workshop:'Workshop „Der innere Bodyguard“',home:'Startseite',andere:'Andere Seite','flyer:neu':'Neuer Flyer'};
+let flyers=[],unsubFlyer=null;
+const seiteName=k=>SEITEN[k]||(String(k).startsWith('flyer:')?'Flyer: '+((flyers.find(f=>'flyer:'+f.id===k)||{}).titel||k.slice(6)):k);
 const STATUS={neu:'Vorschlag folgt',vorschlag:'Bitte prüfen',rueckfrage:'Rückfrage',freigegeben:'Freigegeben – wird umgesetzt',braucht_paul:'Paul übernimmt',umgesetzt:'Live',verworfen:'Verworfen'};
 
 const $=s=>document.querySelector(s);
@@ -193,6 +210,8 @@ async function login(p,silent){
     if(unsub)unsub();
     if(unsubLauf)unsubLauf();
     unsubLauf=FB.onSnapshot(FB.doc(fs,'webwuensche',pw,'status','lauf'),d=>{lauf=d.exists()?d.data():{};renderLauf()},()=>{});
+    if(unsubFlyer)unsubFlyer();
+    unsubFlyer=FB.onSnapshot(FB.collection(fs,'webwuensche',pw,'flyer'),s=>{flyers=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.titel||'').localeCompare(b.titel||''));renderFlyer();render()},()=>{});
     unsub=FB.onSnapshot(FB.query(col(),FB.orderBy('erstelltAm','desc'),FB.limit(200)),s=>{items=s.docs.map(d=>({id:d.id,...d.data()}));render()},()=>flash('Die Verbindung ist unterbrochen. Lade die Seite bitte neu.',true));
   }catch(e){
     ls.set(KEY,null);$('#loginBox').hidden=false;$('#app').hidden=true;
@@ -248,11 +267,12 @@ function change(a,editable,key){
 function card(w){
   const attn=['vorschlag','rueckfrage'].includes(w.status);
   const c=el('article',{class:'card'+(attn?' attn':'')});
-  c.append(el('div',{class:'meta'},el('span',{class:'pill p-'+w.status,text:STATUS[w.status]||w.status}),el('span',{text:(SEITEN[w.seite]||w.seite)+' · '+fmt(w.erstelltAm)})));
+  c.append(el('div',{class:'meta'},el('span',{class:'pill p-'+w.status,text:STATUS[w.status]||w.status}),el('span',{text:seiteName(w.seite)+' · '+fmt(w.erstelltAm)})));
   c.append(el('p',{class:'wish',text:'„'+w.wunsch+'“'}));
   if(Array.isArray(w.bilder)&&w.bilder.length){const t=el('div',{class:'thumbs'});w.bilder.forEach(b=>t.append(el('a',{href:b.url,target:'_blank',rel:'noopener'},el('img',{src:b.url,alt:b.name,loading:'lazy'}))));c.append(t)}
   const v=w.vorschlag||{};const ae=Array.isArray(v.aenderungen)?v.aenderungen:[];
 
+  if(v.vorschau&&['vorschlag','freigegeben'].includes(w.status))c.append(el('a',{href:v.vorschau,target:'_blank',rel:'noopener',class:'prev'},el('img',{src:v.vorschau,alt:'Vorschau des Flyers',loading:'lazy'})));
   if(w.status==='vorschlag'){
     ae.forEach((a,i)=>c.append(change(a,true,w.id+'-'+i)));
     if(v.hinweis)c.append(el('p',{class:'note',text:v.hinweis}));
@@ -289,12 +309,27 @@ function card(w){
     const p=el('p',{class:'note result'},el('span',{text:(e.text||'Ist live auf der Webseite.')+' '}));
     if(e.url)p.append(el('a',{href:e.url,target:'_blank',rel:'noopener',text:'Seite ansehen'}));
     c.append(p);
+    if(e.pdf)c.append(dl(e));
   }else if(w.status==='verworfen'){
     c.append(el('div',{class:'row'},el('button',{class:'quiet',type:'button',text:'Wieder aufnehmen',onclick:async()=>{await upd(w.id,{status:'neu'});anstossen()}})));
   }
   return c;
 }
 
+function dl(f){return el('div',{class:'dl'},
+  el('a',{href:f.pdf,target:'_blank',rel:'noopener',class:'btnl'},'PDF für den Druck'),
+  f.png1?el('a',{href:f.png1,target:'_blank',rel:'noopener',class:'btnl ghostl'},'Vorderseite (PNG)'):null,
+  f.png2?el('a',{href:f.png2,target:'_blank',rel:'noopener',class:'btnl ghostl'},'Rückseite (PNG)'):null)}
+function renderFlyer(){
+  const box=$('#listFlyer');
+  box.replaceChildren(...(flyers.length?flyers.map(f=>{const c=el('article',{class:'card'});
+    c.append(el('div',{class:'meta'},el('span',{class:'pill p-umgesetzt',text:'Aktuell'}),el('span',{text:(f.titel||f.id)+(f.aktualisiertAm?' · Stand '+fmt(f.aktualisiertAm):'')})));
+    if(f.vorschau)c.append(el('a',{href:f.vorschau,target:'_blank',rel:'noopener',class:'prev'},el('img',{src:f.vorschau,alt:'Flyer '+(f.titel||''),loading:'lazy'})));
+    if(f.pdf)c.append(dl(f));return c}):[el('p',{class:'empty',text:'Noch keine Flyer hinterlegt.'})]));
+  const og=$('#flyerOpts');const cur=$('#seite').value;
+  og.replaceChildren(...flyers.map(f=>el('option',{value:'flyer:'+f.id},'Flyer ändern: '+(f.titel||f.id))),el('option',{value:'flyer:neu'},'Neuer Flyer'));
+  $('#seite').value=cur;
+}
 const MIN=60*1000;
 /* Durchläufe der geplanten Aufgabe: täglich 0:47, 6:47, 12:47, 18:47 (Berliner Zeit) */
 function naechsterLauf(){const d=new Date(new Date().toLocaleString('en-US',{timeZone:'Europe/Berlin'}));const h=d.getHours()*60+d.getMinutes();const runs=[47,407,767,1127];const n=runs.find(r=>r>h)??runs[0];return Math.floor(n/60)+':'+String(n%60).padStart(2,'0')}
