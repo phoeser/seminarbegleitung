@@ -100,7 +100,7 @@ details .list{margin-top:12px}
     <p class="intro">Beschreib hier in eigenen Worten, was sich auf deiner Webseite oder an deinen Flyern ändern soll – Texte, Bilder, Termine, Buttons oder ganze Abschnitte. Auch neue Flyer kannst du dir hier wünschen. Du siehst vorher genau, was passiert. Erst nach deiner Freigabe geht es live.</p>
     <ol class="steps">
       <li><b>1 · Wunsch schreiben</b>z. B. „Den Dezember-Termin vom Workshop streichen“</li>
-      <li><b>2 · Vorschlag prüfen</b>kommt beim nächsten Durchlauf (alle 6 Stunden)</li>
+      <li><b>2 · Vorschlag prüfen</b>kommt beim nächsten Durchlauf (alle 6 Stunden) – oder früher, wenn du auf „An Paul senden“ klickst</li>
       <li><b>3 · Freigeben</b>geht beim nächsten Durchlauf live</li>
     </ol>
   </header>
@@ -152,7 +152,7 @@ details .list{margin-top:12px}
 
     <section aria-labelledby="h-arbeit">
       <h2 id="h-arbeit">In Arbeit</h2>
-      <div class="row" id="laufBox" style="margin:-4px 0 12px"><p class="status" id="laufText"></p></div>
+      <div class="row" id="laufBox" style="margin:-4px 0 12px"><p class="status" id="laufText"></p><button class="ghost" type="button" id="paulBtn" hidden>An Paul senden</button></div>
       <div class="list" id="listArbeit"></div>
     </section>
 
@@ -176,7 +176,8 @@ const FB_V='12.19.0';
 const FB_CFG={apiKey:"AIzaSyA2IQa8xWN5vthlwzz0AUbsXlt3I_fyyb0",authDomain:"seminarbegleitung-41bc3.firebaseapp.com",projectId:"seminarbegleitung-41bc3",storageBucket:"seminarbegleitung-41bc3.firebasestorage.app",messagingSenderId:"617909555890",appId:"1:617909555890:web:f028af9c5b9fc39bd9efab"};
 const KEY='nicole-webwuensche-pw';
 /* Make-Webhook, der die geplante Aufgabe startet (prüft das Passwort serverseitig) */
-const START_URL='';
+/* Make-Webhook: schickt Paul eine Mail, dass Wünsche zum Bearbeiten bereitliegen (prüft den Schlüssel selbst) */
+const PAUL_URL='https://hook.eu2.make.com/chcbiplmc724elmt16nz5yhbu5pzghs6';
 const SEITEN={neurobalance:'Neurobalance Training',workshop:'Workshop „Der innere Bodyguard“',home:'Startseite',andere:'Andere Seite','flyer:neu':'Neuer Flyer'};
 let flyers=[],unsubFlyer=null;
 const seiteName=k=>SEITEN[k]||(String(k).startsWith('flyer:')?'Flyer: '+((flyers.find(f=>'flyer:'+f.id===k)||{}).titel||k.slice(6)):k);
@@ -245,7 +246,7 @@ $('#wishForm').addEventListener('submit',async e=>{
     }
     await FB.setDoc(ref,{seite:$('#seite').value,wunsch:text,bilder,status:'neu',erstelltAm:now(),aktualisiertAm:now()});
     $('#wunsch').value='';$('#bilder').value='';
-    flash('Gespeichert. Den Vorschlag siehst du hier nach dem nächsten Durchlauf (um '+naechsterLauf()+' Uhr).');
+    flash('Gespeichert. Den Vorschlag siehst du hier nach dem nächsten Durchlauf (um '+naechsterLauf()+' Uhr). Wenn du alles eingetragen hast und es schneller gehen soll, klick unten bei „In Arbeit“ auf „An Paul senden“.');
     anstossen();
   }catch(err){flash('Speichern hat nicht geklappt. Bitte versuch es gleich noch einmal.',true)}
   finally{$('#send').disabled=false}
@@ -339,16 +340,30 @@ async function anstossen(){
   if(!pw)return;
   if(laeuft())return; // läuft schon – die laufende Bearbeitung nimmt neue Wünsche mit
   try{await FB.setDoc(FB.doc(fs,'webwuensche',pw,'status','lauf'),{angefordertAm:now()},{merge:true})}catch(e){}
-  if(!START_URL)return;
-  try{await fetch(START_URL,{method:'POST',mode:'no-cors',body:new URLSearchParams({pw})})}catch(e){}
 }
 function renderLauf(){
   const offen=items.some(w=>['neu','freigegeben'].includes(w.status));
   const t=$('#laufText');
   if(laeuft())t.textContent='Claude arbeitet gerade an deinen Wünschen (seit '+fmt(lauf.seit).split(', ').pop()+' Uhr).';
-  else if(offen)t.textContent='Nächster Durchlauf um '+naechsterLauf()+' Uhr.';
+  else if(offen&&gemeldet())t.textContent='Paul ist benachrichtigt (um '+fmt(lauf.gemeldetAm).split(', ').pop()+' Uhr) und startet die Bearbeitung. Spätestens um '+naechsterLauf()+' Uhr geht es automatisch weiter.';
+  else if(offen)t.textContent='Nächster Durchlauf um '+naechsterLauf()+' Uhr. Wenn es schneller gehen soll, sag Paul Bescheid:';
   else t.textContent=lauf.ende?'Zuletzt bearbeitet: '+fmt(lauf.ende)+' Uhr.':'';
+  $('#paulBtn').hidden=!(offen&&!laeuft()&&!gemeldet());
 }
+/* gilt als gemeldet, wenn die Meldung jünger als 6 Stunden ist, danach kein Lauf begonnen hat und seitdem nichts Neues dazukam */
+function gemeldet(){const t=Date.parse(lauf.gemeldetAm||'');if(!t||Date.now()-t>360*MIN||Date.parse(lauf.seit||'')>t)return false;
+  return !items.some(w=>['neu','freigegeben'].includes(w.status)&&Date.parse(w.aktualisiertAm||'')>t)}
+$('#paulBtn').addEventListener('click',async ev=>{
+  const b=ev.target;b.disabled=true;b.textContent='Wird gesendet …';
+  const of=items.filter(w=>['neu','freigegeben'].includes(w.status));
+  const nr=s=>s==='freigegeben'?'freigegeben':'neu';
+  const liste=of.map(w=>'- ['+nr(w.status)+'] '+String(w.wunsch||'').replace(/\s+/g,' ').slice(0,140)).join('\n');
+  try{
+    await fetch(PAUL_URL,{method:'POST',mode:'no-cors',body:new URLSearchParams({pw,anzahl:of.length,neu:of.filter(w=>w.status==='neu').length,freigegeben:of.filter(w=>w.status==='freigegeben').length,liste})});
+    await FB.setDoc(FB.doc(fs,'webwuensche',pw,'status','lauf'),{gemeldetAm:now()},{merge:true});
+  }catch(e){flash('Das Senden hat nicht geklappt. Bitte versuch es gleich noch einmal.',true)}
+  b.disabled=false;b.textContent='An Paul senden';renderLauf();
+});
 setInterval(renderLauf,60*1000);
 function fill(box,arr,empty){box.replaceChildren(...(arr.length?arr.map(card):[el('p',{class:'empty',text:empty})]))}
 function render(){
