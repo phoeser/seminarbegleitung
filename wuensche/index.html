@@ -88,6 +88,20 @@ details>summary::before{content:"›";display:inline-block;transition:transform 
 details[open]>summary::before{transform:rotate(90deg)}
 details .list{margin-top:12px}
 .login{max-width:420px}
+.tabs{display:flex;gap:6px;border-bottom:1px solid var(--line);margin-top:-8px}
+.tabs button{border-radius:10px 10px 0 0;background:transparent;color:var(--muted);border:1px solid transparent;border-bottom:0;margin-bottom:-1px;padding:9px 16px}
+.tabs button[aria-selected=true]{background:var(--surface);color:var(--petrol);border-color:var(--line)}
+.switch{display:flex;gap:10px;align-items:center;font-weight:600;cursor:pointer;margin:0}
+.switch input{width:20px;height:20px;accent-color:var(--petrol);margin:0}
+.p-an{background:var(--ok-soft);color:var(--ok)}
+.p-aus{background:var(--line);color:var(--muted)}
+.p-offen{background:var(--warn-soft);color:var(--warn)}
+.who{font-weight:600;font-size:17px;margin:0;overflow-wrap:anywhere}
+.who small{display:block;font-weight:400;font-size:14px;color:var(--muted)}
+.ph{font-family:ui-monospace,Menlo,monospace;font-size:13px;background:var(--petrol-soft);color:var(--petrol);border-radius:6px;padding:1px 6px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:540px){.grid2{grid-template-columns:1fr}}
+input[type=email]{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
 .foot{font-size:13px;color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -96,13 +110,16 @@ details .list{margin-top:12px}
 <div class="wrap">
   <header>
     <div class="eyebrow">nicole-ohlemueller.de</div>
-    <h1>Webseiten-Wünsche</h1>
+    <h1 id="titel">Webseiten-Wünsche</h1>
+    <div id="introW">
     <p class="intro">Beschreib hier in eigenen Worten, was sich auf deiner Webseite oder an deinen Flyern ändern soll – Texte, Bilder, Termine, Buttons oder ganze Abschnitte. Auch neue Flyer kannst du dir hier wünschen. Du siehst vorher genau, was passiert. Erst nach deiner Freigabe geht es live.</p>
     <ol class="steps">
       <li><b>1 · Wunsch schreiben</b>z. B. „Den Dezember-Termin vom Workshop streichen“</li>
       <li><b>2 · Vorschlag prüfen</b>kommt beim nächsten Durchlauf (alle 6 Stunden) – oder früher, wenn du auf „An Paul senden“ klickst</li>
       <li><b>3 · Freigeben</b>geht beim nächsten Durchlauf live</li>
     </ol>
+    </div>
+    <p class="intro" id="introA" hidden>Hier siehst du, wer sich über das Formular auf deiner Webseite angemeldet hat. Wenn du willst, bekommt jede Anmeldung automatisch eine Mail von dir, und wenn du „Hat bezahlt“ anklickst, geht eine Zahlungsbestätigung raus. Beide Mails kannst du unten an- und ausschalten und selbst formulieren.</p>
   </header>
 
   <section id="loginBox" class="panel login" aria-labelledby="h-login">
@@ -114,6 +131,11 @@ details .list{margin-top:12px}
   </section>
 
   <div id="app" hidden style="display:flex;flex-direction:column;gap:30px">
+    <div class="tabs" role="tablist">
+      <button type="button" role="tab" id="tW" aria-selected="true">Wünsche</button>
+      <button type="button" role="tab" id="tA" aria-selected="false">Anmeldungen <span class="count" id="cA" hidden></span></button>
+    </div>
+    <div id="tabW" style="display:flex;flex-direction:column;gap:30px">
     <section aria-labelledby="h-neu">
       <h2 id="h-neu">Neuer Wunsch</h2>
       <form class="panel" id="wishForm">
@@ -166,6 +188,54 @@ details .list{margin-top:12px}
       <summary>Erledigt <span id="cDone"></span></summary>
       <div class="list" id="listDone"></div>
     </details>
+    </div>
+
+    <div id="tabA" hidden style="display:flex;flex-direction:column;gap:30px">
+      <section aria-labelledby="h-anm">
+        <h2 id="h-anm">Aktuelle Anmeldungen</h2>
+        <p class="status" id="anmStatus" role="status" style="margin:-4px 0 12px"></p>
+        <div class="list" id="listAnm"></div>
+      </section>
+
+      <details id="handBox">
+        <summary>Anmeldung von Hand eintragen</summary>
+        <form class="panel" id="handForm" style="margin-top:12px">
+          <p class="note">Zum Beispiel, wenn sich jemand per Telefon oder Mail angemeldet hat. Die Anmeldemail geht dabei nur raus, wenn du das unten ankreuzt.</p>
+          <div class="grid2">
+            <div><label for="hVor">Vorname</label><input type="text" id="hVor" required></div>
+            <div><label for="hNach">Nachname</label><input type="text" id="hNach"></div>
+          </div>
+          <div><label for="hMail">E-Mail-Adresse</label><input type="email" id="hMail" required></div>
+          <label class="switch"><input type="checkbox" id="hSend"> Anmeldemail an sie schicken</label>
+          <div class="row"><button class="primary" type="submit">Eintragen</button></div>
+        </form>
+      </details>
+
+      <section aria-labelledby="h-mails">
+        <h2 id="h-mails">Automatische Mails</h2>
+        <p class="note" style="margin:-4px 0 12px">Absender ist kontakt@nicole-ohlemueller.de. Antwortet jemand, landet die Antwort in deinem Postfach. Diese Platzhalter werden automatisch ersetzt: <span class="ph">{vorname}</span> durch den Vornamen und <span class="ph">{betrag}</span> durch den Betrag.</p>
+        <div class="list">
+          <form class="panel" id="mailA">
+            <label class="switch"><input type="checkbox" id="aAn"> Bei jeder neuen Anmeldung automatisch schicken</label>
+            <div><label for="aBetreff">Betreff</label><input type="text" id="aBetreff"></div>
+            <div><label for="aText">Text</label><textarea id="aText" style="min-height:260px"></textarea></div>
+            <div class="row"><button class="primary" type="submit">Speichern</button><p class="status" id="aStatus" role="status"></p></div>
+          </form>
+          <form class="panel" id="mailZ">
+            <label class="switch"><input type="checkbox" id="zAn"> Automatisch schicken, wenn ich „Hat bezahlt“ anklicke</label>
+            <div><label for="zBetrag">Betrag, der beim Klick vorgeschlagen wird</label><input type="text" id="zBetrag" placeholder="59 Euro"></div>
+            <div><label for="zBetreff">Betreff</label><input type="text" id="zBetreff"></div>
+            <div><label for="zText">Text</label><textarea id="zText" style="min-height:200px"></textarea></div>
+            <div class="row"><button class="primary" type="submit">Speichern</button><p class="status" id="zStatus" role="status"></p></div>
+          </form>
+        </div>
+      </section>
+
+      <details>
+        <summary>Archiv <span id="cArch"></span></summary>
+        <div class="list" id="listArch"></div>
+      </details>
+    </div>
 
     <div class="foot"><span>Fragen? Paul hilft weiter.</span><button class="quiet" type="button" id="logout">Abmelden</button></div>
   </div>
@@ -178,6 +248,8 @@ const KEY='nicole-webwuensche-pw';
 /* Make-Webhook, der die geplante Aufgabe startet (prüft das Passwort serverseitig) */
 /* Make-Webhook: schickt Paul eine Mail, dass Wünsche zum Bearbeiten bereitliegen (prüft den Schlüssel selbst) */
 const PAUL_URL='https://hook.eu2.make.com/chcbiplmc724elmt16nz5yhbu5pzghs6';
+/* Make-Webhook: verschickt Anmelde- bzw. Zahlungsmail. Liest Empfänger, Schalter und Text selbst aus Firestore (pw + id), nimmt also nur die ID entgegen */
+const MAIL_URL='https://hook.eu2.make.com/oxtk864obhmmiy6awqw0u3779siamy53';
 const SEITEN={neurobalance:'Neurobalance Training',workshop:'Workshop „Der innere Bodyguard“',home:'Startseite',andere:'Andere Seite','flyer:neu':'Neuer Flyer'};
 let flyers=[],unsubFlyer=null;
 const seiteName=k=>SEITEN[k]||(String(k).startsWith('flyer:')?'Flyer: '+((flyers.find(f=>'flyer:'+f.id===k)||{}).titel||k.slice(6)):k);
@@ -213,6 +285,7 @@ async function login(p,silent){
     unsubLauf=FB.onSnapshot(FB.doc(fs,'webwuensche',pw,'status','lauf'),d=>{lauf=d.exists()?d.data():{};renderLauf()},()=>{});
     if(unsubFlyer)unsubFlyer();
     unsubFlyer=FB.onSnapshot(FB.collection(fs,'webwuensche',pw,'flyer'),s=>{flyers=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.titel||'').localeCompare(b.titel||''));renderFlyer();render()},()=>{});
+    startAnm();
     unsub=FB.onSnapshot(FB.query(col(),FB.orderBy('erstelltAm','desc'),FB.limit(200)),s=>{items=s.docs.map(d=>({id:d.id,...d.data()}));render()},()=>flash('Die Verbindung ist unterbrochen. Lade die Seite bitte neu.',true));
   }catch(e){
     ls.set(KEY,null);$('#loginBox').hidden=false;$('#app').hidden=true;
@@ -378,6 +451,110 @@ function render(){
   $('#cDone').textContent=dn.length?'('+dn.length+')':'';
   renderLauf();
 }
+/* ---------- Anmeldungen ---------- */
+const MAIL_DEFAULT={
+  anmeldungAn:false,zahlungAn:false,betragStandard:'59 Euro',
+  anmeldungBetreff:'Deine Anmeldung zum Workshop „Der innere Bodyguard“',
+  anmeldungText:'Liebe {vorname},\n\nschön, dass du dabei bist! Deine Anmeldung zum Workshop „Der innere Bodyguard“ ist bei mir angekommen.\n\nSamstag, 05.12.2026, 10:00 bis 12:00 Uhr\nFreiraum Forum Bonn, Küdinghovener Str. 60c, 1. Stock\n\nBitte überweise die Workshopgebühr von 59 Euro auf dieses Konto:\n[Kontoinhaberin, IBAN und Verwendungszweck hier eintragen]\n\nSobald das Geld da ist, bekommst du von mir eine kurze Bestätigung.\n\nIch freue mich auf dich.\nHerzliche Grüße\nNicole',
+  zahlungBetreff:'Deine Zahlung ist angekommen',
+  zahlungText:'Liebe {vorname},\n\nvielen Dank, deine Zahlung über {betrag} ist bei mir angekommen. Damit ist dein Platz im Workshop „Der innere Bodyguard“ fest für dich reserviert.\n\nIch freue mich auf dich.\nHerzliche Grüße\nNicole'};
+let anm=[],mails={...MAIL_DEFAULT},unsubAnm=null,unsubMails=null,mailsGeladen=false,mailsGespeichert=false;
+const acol=()=>FB.collection(fs,'webwuensche',pw,'anmeldungen');
+const mref=()=>FB.doc(fs,'webwuensche',pw,'einstellungen','mails');
+function startAnm(){
+  if(unsubAnm)unsubAnm();if(unsubMails)unsubMails();
+  unsubAnm=FB.onSnapshot(FB.query(acol(),FB.orderBy('eingegangenAm','desc'),FB.limit(300)),s=>{anm=s.docs.map(d=>({id:d.id,...d.data()}));renderAnm()},()=>{});
+  unsubMails=FB.onSnapshot(mref(),d=>{mailsGespeichert=d.exists();mails={...MAIL_DEFAULT,...(d.exists()?d.data():{})};fillMails(!mailsGeladen);mailsGeladen=true;renderAnm()},()=>{});
+}
+function tab(a){
+  $('#tW').setAttribute('aria-selected',String(!a));$('#tA').setAttribute('aria-selected',String(a));
+  $('#tabW').hidden=a;$('#tabA').hidden=!a;$('#introW').hidden=a;$('#introA').hidden=!a;
+  $('#titel').textContent=a?'Anmeldungen':'Webseiten-Wünsche';ls.set('nicole-tab',a?'A':null);
+}
+$('#tW').addEventListener('click',()=>tab(false));$('#tA').addEventListener('click',()=>tab(true));
+if(ls.get('nicole-tab')==='A')tab(true);
+
+function fillMails(force){
+  const set=(id,v)=>{const e=$(id);if(force||document.activeElement!==e)e.value=v||''};
+  if(force){$('#aAn').checked=!!mails.anmeldungAn;$('#zAn').checked=!!mails.zahlungAn}
+  if(force){set('#aBetreff',mails.anmeldungBetreff);set('#aText',mails.anmeldungText);set('#zBetreff',mails.zahlungBetreff);set('#zText',mails.zahlungText);set('#zBetrag',mails.betragStandard)}
+}
+const LUECKE='hier eintragen';
+async function saveMails(patch,status){
+  const s=$(status);s.className='status';
+  if(patch.anmeldungAn&&($('#aText').value.includes(LUECKE))){$('#aAn').checked=false;patch.anmeldungAn=false;s.className='status err';s.textContent='Bitte trag zuerst deine Bankverbindung in den Text ein (statt „[… hier eintragen]“) und speichere. Dann kannst du die Mail einschalten.';if(Object.keys(patch).length===1)return}
+  else s.textContent='Wird gespeichert …';
+  if(!mailsGespeichert)patch={...MAIL_DEFAULT,...patch};
+  try{await FB.setDoc(mref(),{...patch,aktualisiertAm:now()},{merge:true});if(!s.classList.contains('err'))s.textContent='Gespeichert.'}
+  catch(e){s.className='status err';s.textContent='Speichern hat nicht geklappt. Bitte versuch es noch einmal.'}
+}
+$('#mailA').addEventListener('submit',e=>{e.preventDefault();saveMails({anmeldungAn:$('#aAn').checked,anmeldungBetreff:$('#aBetreff').value.trim(),anmeldungText:$('#aText').value},'#aStatus')});
+$('#mailZ').addEventListener('submit',e=>{e.preventDefault();saveMails({zahlungAn:$('#zAn').checked,zahlungBetreff:$('#zBetreff').value.trim(),zahlungText:$('#zText').value,betragStandard:$('#zBetrag').value.trim()},'#zStatus')});
+/* Schalter speichern sofort, damit „an/aus“ nicht vom Speichern-Knopf abhängt */
+$('#aAn').addEventListener('change',e=>saveMails({anmeldungAn:e.target.checked},'#aStatus'));
+$('#zAn').addEventListener('change',e=>saveMails({zahlungAn:e.target.checked},'#zStatus'));
+
+function anmFlash(t,err){const s=$('#anmStatus');s.textContent=t;s.className='status'+(err?' err':'')}
+async function aupd(id,patch){try{await FB.updateDoc(FB.doc(acol(),id),{...patch,aktualisiertAm:now()});return true}catch(e){anmFlash('Das hat nicht geklappt. Bitte lade die Seite neu und versuch es noch einmal.',true);return false}}
+async function mailSenden(id,typ,manuell){
+  if(!mailsGespeichert){anmFlash('Bitte schau dir unten bei „Automatische Mails“ zuerst den Text an und klick auf „Speichern“. Dann kannst du die Mail verschicken.',true);return}
+  if(typ==='anmeldung'&&String(mails.anmeldungText||'').includes(LUECKE)){anmFlash('Im Text der Anmeldemail fehlt noch die Bankverbindung (statt „[… hier eintragen]“). Bitte ergänze sie unten und speichere.',true);return}
+  try{
+    await fetch(MAIL_URL,{method:'POST',mode:'no-cors',body:new URLSearchParams({pw,id,typ,manuell:manuell?'1':'0'})});
+    anmFlash(typ==='zahlung'?'Die Zahlungsbestätigung wird verschickt.':'Die Anmeldemail wird verschickt.');
+  }catch(e){anmFlash('Die Mail konnte nicht verschickt werden. Bitte versuch es gleich noch einmal.',true)}
+}
+const voll=a=>[a.vorname,a.nachname].filter(Boolean).join(' ')||a.name||'(ohne Namen)';
+function acard(a){
+  const c=el('article',{class:'card'+(!a.bezahlt&&!a.archiviert?' attn':'')});
+  const pills=el('div',{class:'meta'});
+  pills.append(el('span',{class:'pill '+(a.bezahlt?'p-an':'p-offen'),text:a.bezahlt?'Bezahlt'+(a.betrag?' · '+a.betrag:''):'Zahlung offen'}));
+  pills.append(el('span',{text:'angemeldet '+fmt(a.eingegangenAm)+(a.quelle==='hand'?' · von Hand':'')}));
+  c.append(pills);
+  c.append(el('p',{class:'who'},voll(a),el('small',{text:[a.email,a.telefon].filter(Boolean).join(' · ')})));
+  const info=[];
+  info.push(a.anmeldungMailAm?'Anmeldemail verschickt am '+fmt(a.anmeldungMailAm):'Anmeldemail noch nicht verschickt');
+  if(a.bezahlt)info.push(a.zahlungMailAm?'Zahlungsbestätigung verschickt am '+fmt(a.zahlungMailAm):'Zahlungsbestätigung noch nicht verschickt');
+  c.append(el('p',{class:'note',text:info.join(' · ')}));
+  const row=el('div',{class:'row'});
+  if(!a.bezahlt){
+    const box=el('div',{hidden:'',class:'row',style:'width:100%'});
+    const inp=el('input',{type:'text','aria-label':'Betrag',style:'max-width:180px'});inp.value=mails.betragStandard||'';
+    box.append(inp,el('button',{class:'primary',type:'button',text:mails.zahlungAn?'Bestätigen und Mail schicken':'Als bezahlt markieren',onclick:async ev=>{
+      ev.target.disabled=true;
+      if(await aupd(a.id,{bezahlt:true,bezahltAm:now(),betrag:inp.value.trim()})){if(mails.zahlungAn)await mailSenden(a.id,'zahlung',false);else anmFlash('Als bezahlt markiert. Die automatische Zahlungsbestätigung ist ausgeschaltet.')}
+    }}));
+    row.append(el('button',{class:'primary',type:'button',text:'Hat bezahlt',onclick:ev=>{box.hidden=!box.hidden;if(!box.hidden){inp.focus();inp.select()}}}));
+    c.append(row,box);
+  }else{
+    if(!a.zahlungMailAm)row.append(el('button',{class:'ghost',type:'button',text:'Zahlungsbestätigung jetzt schicken',onclick:async ev=>{ev.target.disabled=true;await mailSenden(a.id,'zahlung',true)}}));
+    row.append(el('button',{class:'quiet',type:'button',text:'Doch nicht bezahlt',onclick:()=>aupd(a.id,{bezahlt:false,bezahltAm:null})}));
+    c.append(row);
+  }
+  if(!a.anmeldungMailAm&&a.email)row.append(el('button',{class:'ghost',type:'button',text:'Anmeldemail jetzt schicken',onclick:async ev=>{ev.target.disabled=true;await mailSenden(a.id,'anmeldung',true)}}));
+  row.append(el('button',{class:'quiet',type:'button',text:a.archiviert?'Zurückholen':'Ins Archiv',onclick:()=>aupd(a.id,{archiviert:!a.archiviert})}));
+  return c;
+}
+function renderAnm(){
+  const akt=anm.filter(a=>!a.archiviert),arch=anm.filter(a=>a.archiviert);
+  const a=document.activeElement;
+  if(!(a&&$('#listAnm').contains(a)&&a.tagName==='INPUT'))
+    $('#listAnm').replaceChildren(...(akt.length?akt.map(acard):[el('p',{class:'empty',text:'Noch keine Anmeldungen. Neue Anmeldungen über das Formular auf deiner Webseite erscheinen hier nach ein paar Minuten.'})]));
+  $('#listArch').replaceChildren(...(arch.length?arch.map(acard):[el('p',{class:'empty',text:'Nichts im Archiv.'})]));
+  $('#cArch').textContent=arch.length?'('+arch.length+')':'';
+  const offen=akt.filter(x=>!x.bezahlt).length;$('#cA').hidden=!offen;$('#cA').textContent=offen;
+}
+$('#handForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const vorname=$('#hVor').value.trim(),nachname=$('#hNach').value.trim(),email=$('#hMail').value.trim();if(!vorname||!email)return;
+  try{
+    const ref=FB.doc(acol());
+    await FB.setDoc(ref,{vorname,nachname,email,quelle:'hand',bezahlt:false,archiviert:false,eingegangenAm:now(),aktualisiertAm:now()});
+    if($('#hSend').checked)await mailSenden(ref.id,'anmeldung',true);else anmFlash('Eingetragen.');
+    $('#handForm').reset();$('#handBox').open=false;
+  }catch(err){anmFlash('Eintragen hat nicht geklappt. Bitte versuch es noch einmal.',true)}
+});
+
 boot().catch(()=>{$('#loginStatus').textContent='Die Seite konnte nicht geladen werden. Bitte lade sie neu.';$('#loginStatus').className='status err'});
 </script>
 </body>
