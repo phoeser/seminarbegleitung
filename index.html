@@ -152,6 +152,38 @@ input:focus,textarea:focus,select:focus{border-color:var(--petrol);outline:none;
 .scale output{font-family:var(--f-display);font-size:1.3rem;color:var(--petrol);min-width:2ch;text-align:right;font-variant-numeric:tabular-nums}
 .scale .ends{display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted)}
 input[type=range]{width:100%;accent-color:var(--petrol)}
+.ws-nav{display:flex;flex-wrap:wrap;gap:6px}
+.ws-nav button{font:inherit;font-size:.82rem;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:999px;padding:5px 12px;cursor:pointer}
+.ws-nav button.done{color:var(--ink);border-color:var(--petrol)}
+.ws-nav button.done::before{content:"✓ ";color:var(--petrol)}
+.ws-nav button[aria-current]{background:var(--petrol);color:var(--on-petrol);border-color:var(--petrol)}
+.ws-nav button[aria-current]::before{color:var(--on-petrol)}
+.ws-card{border-top:4px solid var(--petrol)}
+.ws-card.kind{border-top-color:var(--terra)}.ws-card.eltern{border-top-color:hsl(330 25% 42%)}.ws-card.bew{border-top-color:hsl(205 35% 42%)}.ws-card.esk{border-top-color:hsl(0 45% 48%)}
+.ws-flow{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center}
+.ws-box{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--sand)}
+.ws-box h3{font-size:1rem;margin:0 0 4px}
+.ws-arrow{color:var(--muted);font-size:1.3rem}
+.ws-modes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ws-mode{border-radius:12px;padding:12px 14px;border:1px solid var(--line);border-left:4px solid var(--petrol);background:var(--surface)}
+.ws-mode.wide{grid-column:1/-1}
+.ws-mode.kind{border-left-color:var(--terra);background:var(--terra-soft)}
+.ws-mode.eltern{border-left-color:hsl(330 25% 42%)}
+.ws-mode.bew{border-left-color:hsl(205 35% 42%)}
+.ws-mode.esk{border-left-color:hsl(0 45% 48%)}
+.ws-mode.trig{border-left-color:var(--muted)}
+.ws-mode.ge{border-left-color:var(--petrol);background:var(--petrol-soft)}
+.ws-tag{display:block;font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.ws-val{margin:0;font-family:var(--f-display);font-size:1.05rem;white-space:pre-wrap}
+.ws-val.ws-open{color:var(--muted);font-style:italic;font-size:.95rem}
+.ws-sentence textarea{border-color:var(--petrol)}
+.ws-sugg{display:flex;flex-wrap:wrap;gap:6px}
+.ws-chip{font:inherit;font-size:.8rem;border:1px dashed var(--line);background:transparent;color:var(--muted);border-radius:999px;padding:3px 10px;cursor:pointer}
+.ws-chip:hover{border-color:var(--petrol);color:var(--ink)}
+.ws-ol{margin:0;padding-left:1.3rem;display:grid;gap:6px}
+.ws-sum{white-space:pre-wrap;font-family:var(--f-body);font-size:.88rem;background:var(--sand);border-radius:12px;padding:14px;max-height:340px;overflow:auto;margin:0}
+@media (max-width:560px){.ws-modes{grid-template-columns:1fr}.ws-flow{grid-template-columns:1fr}.ws-arrow{transform:rotate(90deg);justify-self:center}}
+@media print{.ws-nav,.form-actions,.ws-sugg{display:none}}
 .choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
 .choice{position:relative}
 .choice input{position:absolute;opacity:0;inset:0;cursor:pointer}
@@ -473,7 +505,7 @@ function render(){
   if(S.mode==='loading')return;
   renderNav();renderFlash();
   let v=S.view;let html='';
-  const needsLogin=S.mode==='fb'&&!S.user&&['home','assess','checkin','admin','sem-edit','ex-edit','mydata'].includes(v);
+  const needsLogin=S.mode==='fb'&&!S.user&&['home','assess','checkin','ws','admin','sem-edit','ex-edit','mydata'].includes(v);
   if(S.mode==='fb'&&!S.authReady&&v!=='booking'&&v!=='booking-result')html=loadingHtml();
   else if(v==='confirm-email')html=viewConfirmEmail();
   else if(needsLogin||v==='login')html=viewLogin();
@@ -484,11 +516,12 @@ function render(){
   else if(v==='booking')html=viewBooking();
   else if(v==='booking-result')html=viewBookingResult();
   else if(v==='mydata')html=viewMyData();
+  else if(v==='ws')html=viewWorksheet();
   else if(v==='admin')html=S.isAdmin?viewAdmin():viewHome();
   else if(v==='sem-edit')html=viewSemEdit();
   else if(v==='ex-edit')html=viewExEdit();
   $('#app').innerHTML=html;
-  S.lock=needsLogin||['assess','checkin','booking','sem-edit','ex-edit','login','confirm-email','mydata'].includes(v);
+  S.lock=needsLogin||['assess','checkin','ws','booking','sem-edit','ex-edit','login','confirm-email','mydata'].includes(v);
 }
 function loadingHtml(){return `<div class="loading"><div class="breath"></div><p>Einen Atemzug lang Geduld, die Seminarbegleitung lädt.</p></div>`}
 
@@ -590,6 +623,7 @@ function viewDashboard(sem){
     <p>Dieselben Fragen wie zu Beginn. So siehst du, was sich verändert hat.</p>
     <button class="btn ${r.post?'ghost':''}" data-act="open-assess" data-kind="post">${r.post?'Ansehen und ändern':'Jetzt einschätzen'}</button></div>`);
   }
+  const wsc=wsDashCard(sem);if(wsc)tasks.push(wsc);
   const practiced=r.practiced||{};
   const exHtml=doneS.length?doneS.slice().reverse().map(x=>{
     const exs=(x.exerciseIds||[]).map(exById).filter(Boolean);
@@ -667,6 +701,139 @@ function viewCheckin(){
   <div class="stack" style="gap:6px"><label class="lbl" for="c-heute">Was brauchst du heute?</label><textarea id="c-heute" name="c-heute">${esc(old.heute||'')}</textarea></div></fieldset>
   <div class="form-actions"><button class="btn" type="submit">Check-In abschicken</button><button class="btn ghost" type="button" data-go="home">Abbrechen</button></div>
   </form></div>`;
+}
+
+/* ---------- Arbeitsblatt: Dein Modusmodell ---------- */
+const WS_STEPS=[
+  {nav:'Das Modell',kicker:'Einführung',title:'So funktioniert das Modusmodell',info:true},
+  {nav:'Trigger',kicker:'Schritt 1',title:'Trigger finden',
+   intro:'Denk an eine Situation, in der deine Reaktion größer war, als es die Situation eigentlich verlangt hätte. Wann hast du überreagiert und dich überfordert gefühlt?',
+   q:[{k:'t_situation',l:'Die Situation',h:'Kurz beschreiben: wo, wann, mit wem?'},
+      {k:'t_gedacht',l:'Was hast du gedacht?'},
+      {k:'t_gefuehlt',l:'Was hast du gefühlt?',chips:['Angst','Wut','Ohnmacht','Scham','Traurigkeit','Hilflosigkeit']},
+      {k:'t_getan',l:'Was hast du getan?'},
+      {k:'trigger',l:'Was war der Auslöser?',h:'Der konkrete Moment, zum Beispiel ein bestimmter Satz, ein Tonfall, Kritik oder Zurückweisung.',sentence:true}]},
+  {nav:'Kindmodus',kicker:'Schritt 2',tone:'kind',title:'Kindmodus: das unerfüllte Bedürfnis',
+   q:[{k:'k_beduerfnis',l:'Worum ging es wirklich? Welches Bedürfnis kam in der Situation zu kurz?',chips:['Nähe','Anerkennung','Sicherheit','Gesehen werden','Verstanden werden','Harmonie','Kontrolle','Autonomie']},
+      {k:'k_kindheit',l:'Kennst du dieses Thema aus deiner Kindheit?'},
+      {k:'k_derzeit',l:'Kommt dieses Bedürfnis im Moment öfter zu kurz?'},
+      {k:'s_kind',l:'Da ist ein Teil in mir, der fühlt oder denkt: …',h:'Zum Beispiel: Ich bin nicht gut genug. Ich kann nichts richtig machen. Keiner mag mich. Ich bin nicht wichtig.',sentence:true}]},
+  {nav:'Bewältigung',kicker:'Schritt 3',tone:'bew',title:'Bewältigungsmodus: deine Strategie',
+   q:[{k:'b_getan',l:'Was hast du getan, um das Bedürfnis trotzdem zu erfüllen oder das Problem zu lösen?'},
+      {k:'b_strategien',l:'Welche Strategien nutzt du in ähnlichen Situationen häufig?',chips:['Anpassen','Rückzug','Kontrolle','Angriff','Funktionieren','Perfektionismus','Vermeiden']},
+      {k:'s_bew',l:'Da ist ein Teil in mir, der will: …',h:'Zum Beispiel, dass alles reibungslos funktioniert, dass du immer die Beste bist oder dass du dich anpasst und nicht streitest.',sentence:true}]},
+  {nav:'Elternmodus',kicker:'Schritt 4',tone:'eltern',title:'Elternmodus: der innere Kritiker',
+   q:[{k:'e_saetze',l:'Welche Sätze hast du in diesem Moment über dich gedacht?'},
+      {k:'e_regeln',l:'Welche verinnerlichten Regeln, Normen oder Erwartungen melden sich?'},
+      {k:'e_woher',l:'Woher kennst du diese Stimme? Vielleicht von deinen Eltern?'},
+      {k:'s_eltern',l:'Da ist eine kritische Stimme, die immer wieder sagt: …',h:'Zum Beispiel, dass du dich mehr anstrengen musst oder dass mit dir etwas nicht stimmt.',sentence:true}]},
+  {nav:'Eskalation',kicker:'Schritt 5',tone:'esk',title:'Eskalation erkennen',
+   intro:'Wie hat sich dein System geschützt, als die Strategie nicht mehr gereicht hat? Du kannst mehreres auswählen.',
+   checks:[{k:'x_fight',t:'Fight',d:'zum Beispiel Wut, Angriff, laut werden'},{k:'x_flight',t:'Flight',d:'Rückzug, Schweigen, Ignorieren'},{k:'x_freeze',t:'Freeze',d:'innerlich erstarren, dich emotional abkapseln'}],
+   q:[{k:'x_notiz',l:'Wie läuft das bei dir ab?',h:'Zum Beispiel: erst Rückzug, dann Angriff.'}]},
+  {nav:'Deine Karte',kicker:'Schritt 6',title:'Dein Modusmodell auf einen Blick',map:true,
+   q:[{k:'s_ge',l:'Gesunde Erwachsene: Was würde der ruhige, erwachsene Teil in dir jetzt sagen oder tun?',h:'Zum Beispiel Gelassenheit, Abstand, vermitteln, gut für dich sorgen.',sentence:true}]},
+  {nav:'Ein Anteil',kicker:'Anteil kennenlernen',tone:'kind',title:'Gib einem Anteil ein Gesicht',
+   intro:'Je konkreter du einen Anteil beschreibst, desto leichter erkennst du ihn im Alltag wieder.',
+   q:[{k:'p_name',l:'Name des Anteils',input:true,h:'Zum Beispiel „die kleine Wächterin“'},
+      {k:'p_gruppe',l:'Modusgruppe',select:['Kindmodus','Elternmodus','Bewältigungsmodus']},
+      {k:'p_beschreibung',l:'Beschreibung'},{k:'p_aussehen',l:'Aussehen'},{k:'p_eigenarten',l:'Eigenarten'},
+      {k:'p_vorlieben',l:'Vorlieben'},{k:'p_besonderheiten',l:'Besonderheiten'},
+      {k:'p_meldet',l:'In diesen Situationen meldet er sich gerne'},
+      {k:'p_nichts',l:'In diesen Situationen hat er nichts zu suchen'},
+      {k:'p_hilfreich',l:'In diesen Situationen kann er hilfreich sein'},
+      {k:'p_saetze',l:'Typische Sätze dieses Anteils'}]},
+  {nav:'Nachversorgung',kicker:'Nachversorgung',title:'Was braucht jeder Anteil?',care:true,
+   q:[{k:'n_kind',l:'Was gibst du deinem Kindmodus?'},{k:'n_eltern',l:'Was gibst du deinem Elternmodus?'},{k:'n_bew',l:'Was gibst du deinem Bewältigungsmodus?'},
+      {k:'n_anker',l:'Dein Körperanker',h:'Eine kleine Geste, die dir Halt gibt, zum Beispiel die Hand aufs Herz legen, die Füße bewusst auf den Boden stellen oder lange ausatmen.'}]},
+  {nav:'Muster durchbrechen',kicker:'Musterdurchbrechung',title:'Aus dem Muster aussteigen',steps4:true,
+   q:[{k:'m_signal',l:'Woran merkst du früh, dass dein Muster anspringt?',h:'Ein Gedanke, ein Körpergefühl, ein Impuls.'},
+      {k:'m_ritual',l:'Wann übst du jeden Tag die Verbindung mit deiner gesunden Erwachsenen?',h:'Zum Beispiel beim Zähneputzen oder auf dem Weg zur Arbeit.'},
+      {k:'m_satz',l:'Dein Satz für den Ernstfall',h:'Was sagt deine gesunde Erwachsene, wenn der Auslöser kommt?',sentence:true}]},
+  {nav:'Teilen',kicker:'Geschafft',title:'Deine Zusammenfassung',summary:true}
+];
+const WS_ESK=[['x_fight','Fight'],['x_flight','Flight'],['x_freeze','Freeze']];
+function wsKey(sid){return 'ws-modus-'+((S.user&&S.user.uid)||'demo')+'-'+sid}
+function wsShared(sid){const r=((S.me.seminars||{})[sid]||{});return r.ws&&r.ws.modusmodell||null}
+function wsDraft(sid){
+  if(S.wsA&&S.wsA.sid===sid)return S.wsA.a;
+  let a=null;try{a=JSON.parse(lsGet(wsKey(sid))||'null')}catch(e){}
+  if(!a){const sh=wsShared(sid);a=sh?clone(sh.a):{}}
+  S.wsA={sid,a};return a;
+}
+function wsStore(sid){lsSet(wsKey(sid),JSON.stringify(S.wsA.a))}
+function wsFilled(a,st){return (st.q||[]).some(q=>String(a[q.k]||'').trim())||(st.checks||[]).some(c=>a[c.k])}
+function wsVal(a,k){const v=String(a[k]||'').trim();return v?`<p class="ws-val">${esc(v)}</p>`:`<p class="ws-val ws-open">noch offen</p>`}
+function wsMap(a){
+  const esk=WS_ESK.filter(([k])=>a[k]).map(([,t])=>t).join(' · ');
+  return `<div class="ws-modes">
+   <div class="ws-mode kind"><span class="ws-tag">Kindmodus</span>${wsVal(a,'s_kind')}</div>
+   <div class="ws-mode eltern"><span class="ws-tag">Elternmodus</span>${wsVal(a,'s_eltern')}</div>
+   <div class="ws-mode bew wide"><span class="ws-tag">Bewältigungsmodus</span>${wsVal(a,'s_bew')}</div>
+   <div class="ws-mode esk"><span class="ws-tag">Eskalation</span>${esk?`<p class="ws-val">${esk}</p>`:'<p class="ws-val ws-open">noch offen</p>'}${String(a.x_notiz||'').trim()?`<p class="small">${esc(a.x_notiz)}</p>`:''}</div>
+   <div class="ws-mode trig"><span class="ws-tag">Auslöser</span>${wsVal(a,'trigger')}</div>
+   <div class="ws-mode ge wide"><span class="ws-tag">Gesunde Erwachsene</span>${wsVal(a,'s_ge')}</div></div>`;
+}
+function wsText(a){
+  const L=[];
+  WS_STEPS.forEach(st=>{const lines=[];
+    (st.checks||[]).forEach(c=>{if(a[c.k])lines.push(`• ${c.t} (${c.d})`)});
+    (st.q||[]).forEach(q=>{const v=String(a[q.k]||'').trim();if(v)lines.push(`${q.l}\n  ${v.replace(/\n/g,'\n  ')}`)});
+    if(lines.length)L.push(`— ${st.title} —`,...lines,'')});
+  return L.length?'MEIN MODUSMODELL\n\n'+L.join('\n'):'Noch nichts eingetragen.';
+}
+function wsQ(q,a){
+  const v=a[q.k]??'';let f;
+  if(q.select)f=`<select id="ws-${q.k}" data-ws="${q.k}"><option value="">Bitte wählen</option>${q.select.map(o=>`<option ${v===o?'selected':''}>${o}</option>`).join('')}</select>`;
+  else if(q.input)f=`<input type="text" id="ws-${q.k}" data-ws="${q.k}" value="${esc(v)}">`;
+  else f=`<textarea id="ws-${q.k}" data-ws="${q.k}">${esc(v)}</textarea>`;
+  const chips=q.chips?`<div class="ws-sugg">${q.chips.map(c=>`<button type="button" class="ws-chip" data-act="ws-chip" data-k="${q.k}" data-v="${esc(c)}">+ ${esc(c)}</button>`).join('')}</div>`:'';
+  const inner=`<label class="lbl" for="ws-${q.k}">${esc(q.l)}</label>${q.h?`<span class="hint">${esc(q.h)}</span>`:''}${f}${chips}`;
+  return `<div class="stack ${q.sentence?'ws-sentence':''}" style="gap:6px">${inner}</div>`;
+}
+function wsDashCard(sem){
+  if(!(sem.worksheets||[]).includes('modusmodell'))return '';
+  const sh=wsShared(sem.id);let draft=false;try{draft=!!lsGet(wsKey(sem.id))}catch(e){}
+  return `<div class="card task"><div class="head"><h3>Arbeitsblatt: Dein Modusmodell</h3>${sh?'<span class="pill ok">Geteilt</span>':draft?'<span class="pill">Entwurf</span>':'<span class="pill open">Offen</span>'}</div>
+  <p>${sh?`Am ${esc(fmtStamp(sh.at))} mit Nicole geteilt. Du kannst es weiter bearbeiten und neu teilen.`:'Erkenne ein Muster, lerne deine inneren Anteile kennen und übe, aus dem Muster auszusteigen. Etwa 20 Minuten.'}</p>
+  <button class="btn ${sh?'ghost':''}" data-act="open-ws">${sh||draft?'Weiterarbeiten':'Arbeitsblatt öffnen'}</button></div>`;
+}
+function viewWorksheet(){
+  const sem=semById(S.me.current);if(!sem)return viewHome();
+  const a=wsDraft(sem.id);const i=Math.max(0,Math.min(WS_STEPS.length-1,Number(S.p.step)||0));const st=WS_STEPS[i];
+  const sh=wsShared(sem.id);
+  const nav=WS_STEPS.map((x,j)=>`<button type="button" data-act="ws-step" data-step="${j}" ${j===i?'aria-current="step"':''} class="${wsFilled(a,x)?'done':''}">${esc(x.nav)}</button>`).join('');
+  let body='';
+  if(st.info)body=`<p>Wenn ein <b>Kernbedürfnis</b> in der Kindheit oft zu kurz kam, entstehen Verhaltensmuster, sogenannte <b>Schemata</b>. Ein Auslöser im Alltag aktiviert sie, und verschiedene innere Anteile, die <b>Modi</b>, springen an.</p>
+   <div class="ws-flow"><div class="ws-box"><h3>Unerfülltes Kernbedürfnis</h3><p class="small muted">zum Beispiel bedingungslose Liebe, Autonomie, Grenzen setzen, Gefühle ausdrücken, Spiel</p></div><span class="ws-arrow" aria-hidden="true">→</span><div class="ws-box"><h3>Verhaltensmuster (Schema)</h3><p class="small muted">zum Beispiel Perfektionismus, Anpassung, Vermeidung, People Pleasing</p></div></div>
+   <div class="ws-modes">
+    <div class="ws-mode kind"><span class="ws-tag">Kindmodus</span><p class="small">Das unerfüllte Bedürfnis meldet sich, zum Beispiel nach Wertschätzung.</p></div>
+    <div class="ws-mode eltern"><span class="ws-tag">Elternmodus</span><p class="small">Verinnerlichte Werte und Normen, zum Beispiel „Reiß dich zusammen!“</p></div>
+    <div class="ws-mode bew wide"><span class="ws-tag">Bewältigungsmodus</span><p class="small">Die Strategie, mit der du das Gefühl in den Griff bekommen willst, zum Beispiel Perfektionismus.</p></div>
+    <div class="ws-mode esk wide"><span class="ws-tag">Eskalation</span><p class="small">Reicht die Strategie nicht mehr, übernimmt Fight, Flight oder Freeze.</p></div>
+    <div class="ws-mode ge wide"><span class="ws-tag">Gesunde Erwachsene</span><p class="small">Der Teil in dir, der alle anderen sieht, gut für sie sorgt und bewusst entscheidet.</p></div></div>
+   <p class="care">Alles darf, nichts muss. Wenn dich eine Frage zu sehr aufwühlt, lass sie offen und sprich sie lieber mit Nicole an.</p>`;
+  if(st.intro)body+=`<p class="lead muted">${esc(st.intro)}</p>`;
+  if(st.care)body+=`<div class="ws-modes"><div class="ws-mode kind"><span class="ws-tag">Kindmodus</span><p class="small">braucht Sicherheit, Liebe, Wertschätzung, Spiel …</p></div><div class="ws-mode eltern"><span class="ws-tag">Elternmodus</span><p class="small">braucht Dankbarkeit, Verständnis, Begrenzung …</p></div><div class="ws-mode bew wide"><span class="ws-tag">Bewältigungsmodus</span><p class="small">braucht Bereiche, in denen er sich austoben kann, und Pausen.</p></div></div>`;
+  if(st.steps4)body+=`<ol class="ws-ol"><li><b>Erkennen,</b> wann dein Muster anspringt.</li><li><b>Dich gleich versorgen,</b> mit deinem Körperanker.</li><li><b>Dich verbinden</b> mit deiner gesunden Erwachsenen.</li><li><b>Täglich üben,</b> zum Beispiel beim Zähneputzen.</li></ol>`;
+  if(st.map)body+=wsMap(a);
+  if(st.checks)body+=`<div class="choices">${st.checks.map(c=>`<label class="choice"><input type="checkbox" data-ws-c="${c.k}" ${a[c.k]?'checked':''}><span><b>${c.t}</b><small>${esc(c.d)}</small></span></label>`).join('')}</div>`;
+  if(st.q)body+=st.q.map(q=>wsQ(q,a)).join('');
+  if(st.summary)body+=`<p class="lead muted">Hier ist alles, was du eingetragen hast. Dein Entwurf bleibt nur auf diesem Gerät, bis du ihn mit Nicole teilst.</p>${wsMap(a)}
+   <pre class="ws-sum" id="ws-sum">${esc(wsText(a))}</pre>
+   <div class="card stack" style="gap:10px"><h3>Mit Nicole teilen</h3><p class="small">Nicole sieht dann dein ausgefülltes Arbeitsblatt und kann in der nächsten Sitzung darauf eingehen. ${sh?`Zuletzt geteilt am ${esc(fmtStamp(sh.at))}.`:''}</p>
+   <div class="row"><button type="button" class="btn" data-act="ws-share">${sh?'Neue Fassung teilen':'Mit Nicole teilen'}</button>${sh?'<button type="button" class="btn ghost" data-act="ws-unshare">Nicht mehr teilen</button>':''}<button type="button" class="btn ghost" data-act="ws-copy">Text kopieren</button></div></div>`;
+  return `<div class="stack-lg"><section class="hero"><p class="eyebrow">${esc(sem.title)} · Arbeitsblatt</p><h1>Dein Modusmodell <span class="muted" style="font-style:italic">nach Jeffrey Young</span></h1></section>
+  <nav class="ws-nav" aria-label="Schritte">${nav}</nav>
+  <section class="card stack ws-card ${st.tone||''}"><p class="eyebrow">${esc(st.kicker)}</p><h2>${esc(st.title)}</h2>${body}
+   <div class="form-actions">${i>0?`<button type="button" class="btn ghost" data-act="ws-step" data-step="${i-1}">Zurück</button>`:''}${i<WS_STEPS.length-1?`<button type="button" class="btn" data-act="ws-step" data-step="${i+1}">${i===0?'Los geht’s':'Weiter'}</button>`:''}<button type="button" class="btn ghost" data-go="home">Zur Übersicht</button></div>
+  </section></div>`;
+}
+function wsAdminHtml(r){
+  const w=r.ws&&r.ws.modusmodell;if(!w)return '';
+  const a=w.a||{};
+  return `<div class="stack" style="gap:10px"><h3>Arbeitsblatt Modusmodell <span class="small muted">· geteilt am ${esc(fmtStamp(w.at))}</span></h3>${wsMap(a)}
+   <details><summary class="small">Alle Antworten</summary><pre class="ws-sum">${esc(wsText(a))}</pre></details></div>`;
 }
 
 /* ---------- Vor der Buchung ---------- */
@@ -758,6 +925,10 @@ function viewSemEdit(){
    ${exChips(i,x.exerciseIds||[])}</div>`).join('')}
   <button type="button" class="btn ghost sm" data-act="add-sess" style="align-self:flex-start">Termin hinzufügen</button>
   </fieldset>
+  <fieldset><legend>Arbeitsblätter</legend>
+  <p class="hint">Freigeschaltete Arbeitsblätter erscheinen bei den Teilnehmerinnen als Aufgabe. Sie füllen sie in Ruhe aus und entscheiden selbst, ob sie ihre Antworten mit dir teilen.</p>
+  <label class="practice"><input type="checkbox" id="sem-ws-modus" ${(s.worksheets||[]).includes('modusmodell')?'checked':''}>Dein Modusmodell (nach Jeffrey Young): Trigger, Anteile, Nachversorgung, Musterdurchbrechung</label>
+  </fieldset>
   <div class="form-actions"><button class="btn" type="submit">Speichern</button><button class="btn ghost" type="button" data-act="cancel-edit">Abbrechen</button>${isNew?'':`<button class="btn danger" type="button" data-act="del-ask">Löschen</button>`}</div>
   ${S.delAsk?`<div class="confirm"><span>Seminar „${esc(s.title)}“ wirklich löschen? Einträge der Teilnehmerinnen bleiben erhalten.</span><button type="button" class="btn sm danger" data-act="del-sem">Ja, löschen</button><button type="button" class="btn sm ghost" data-act="del-no">Behalten</button></div>`:''}
   </form></div>`;
@@ -769,6 +940,7 @@ function readSemForm(){
   s.sessions=(s.sessions||[]).map((x,i)=>({...x,date:v('s-date-'+i),time:v('s-time-'+i),title:v('s-title-'+i),focus:v('s-focus-'+i),
     done:!!(document.getElementById('s-done-'+i)||{}).checked,
     exerciseIds:[...document.querySelectorAll(`input[name="s-ex-${i}"]:checked`)].map(c=>c.value)}));
+  const wm=document.getElementById('sem-ws-modus');if(wm)s.worksheets=wm.checked?['modusmodell']:[];
 }
 function adminUebungen(){
   return `<div class="stack"><div class="row between"><p class="muted">Deine Übungsbibliothek. Welche davon Teilnehmerinnen sehen, legst du pro Termin im Seminar fest.</p><button class="btn" data-act="new-ex">Neue Übung</button></div>
@@ -811,7 +983,7 @@ function adminAuswertung(){
   const zCount=k=>ciNext.filter(r=>r.checkins[nx.id].zustand===k).length;
   return `<div class="stack">
   <div class="stack" style="gap:6px"><label class="lbl" for="eval-sem">Seminar</label><select id="eval-sem" data-act="eval-sem">${sems.map(s=>`<option value="${esc(s.id)}" ${s.id===sem.id?'selected':''}>${esc(s.title)}</option>`).join('')}</select></div>
-  <div class="stats"><div class="stat"><b>${people.length}</b><span>Teilnehmerinnen</span></div><div class="stat"><b>${pre.length}</b><span>Selbsteinschätzungen vorab</span></div><div class="stat"><b>${nx?ciNext.length:'–'}</b><span>${nx?'Check-Ins für '+esc(fmtDate(nx.date)):'Alle Termine durchgeführt'}</span></div><div class="stat"><b>${post.length}</b><span>Abschluss-Einschätzungen</span></div></div>
+  <div class="stats"><div class="stat"><b>${people.length}</b><span>Teilnehmerinnen</span></div><div class="stat"><b>${pre.length}</b><span>Selbsteinschätzungen vorab</span></div><div class="stat"><b>${nx?ciNext.length:'–'}</b><span>${nx?'Check-Ins für '+esc(fmtDate(nx.date)):'Alle Termine durchgeführt'}</span></div><div class="stat"><b>${post.length}</b><span>Abschluss-Einschätzungen</span></div>${(sem.worksheets||[]).includes('modusmodell')?`<div class="stat"><b>${recs.filter(r=>r.ws&&r.ws.modusmodell).length}</b><span>Modusmodelle geteilt</span></div>`:''}</div>
   ${nx&&ciNext.length?`<div class="card stack"><h3>So kommt die Gruppe zum nächsten Termin</h3><div class="row">${ZUSTAND.map(z=>`<span class="pill ${z.k==='strom'?'warn':z.k==='da'?'ok':''}">${z.t}: ${zCount(z.k)}</span>`).join('')}</div><p class="small muted">Ø Anspannung ${n1(avg(ciNext.map(r=>r.checkins[nx.id].anspannung)))} · Ø Energie ${n1(avg(ciNext.map(r=>r.checkins[nx.id].energie)))} (0 bis 10)</p></div>`:''}
   ${pre.length?`<div class="card stack"><h3>Gruppe im Durchschnitt</h3><div class="legend"><span><i style="background:var(--sand)"></i>Vorab</span>${post.length?'<span><i style="background:var(--petrol)"></i>Abschluss</span>':''}</div>${barsHtml(avgVals(pre.map(r=>r.pre)),post.length?avgVals(post.map(r=>r.post)):null)}</div>`:''}
   <div class="card">${people.length?people.map(p=>personHtml(p,sem)).join(''):`<div class="empty"><b>Noch keine Teilnehmerinnen in diesem Seminar.</b><span>Sobald jemand das Seminar auswählt und etwas einträgt, erscheint es hier.</span></div>`}</div>
@@ -823,13 +995,14 @@ function personHtml(p,sem){
   const zt=k=>(ZUSTAND.find(z=>z.k===k)||{}).t||'–';
   const pr=Object.keys(r.practiced||{}).map(exById).filter(Boolean).map(e=>e.title);
   const texts=r.pre&&r.pre.texts||{};
-  return `<details class="person"><summary><span><b>${esc(p.name||'Ohne Namen')}</b><br><span class="small muted">${r.pre?'Vorab ✓':'Vorab offen'} · ${ciList.length} von ${ses.length} Check-Ins${r.post?' · Abschluss ✓':''}</span></span>${spark(ciList.map(o=>o.c.anspannung))}</summary>
+  return `<details class="person"><summary><span><b>${esc(p.name||'Ohne Namen')}</b><br><span class="small muted">${r.pre?'Vorab ✓':'Vorab offen'} · ${ciList.length} von ${ses.length} Check-Ins${r.post?' · Abschluss ✓':''}${r.ws&&r.ws.modusmodell?' · Modusmodell geteilt':''}</span></span>${spark(ciList.map(o=>o.c.anspannung))}</summary>
   <div class="body">
   ${r.pre?`<div class="stack" style="gap:10px"><h3>Selbsteinschätzung</h3>${barsHtml(r.pre.vals,r.post&&r.post.vals)}
    <dl class="kv">${texts.tragen?`<dt>Trägt gerade</dt><dd>${esc(texts.tragen)}</dd>`:''}${texts.ziel?`<dt>Möchte verändern</dt><dd>${esc(texts.ziel)}</dd>`:''}${texts.hinweis?`<dt>Hinweis für Übungen</dt><dd>${esc(texts.hinweis)}</dd>`:''}
    ${r.post&&r.post.texts&&r.post.texts.veraendert?`<dt>Hat sich verändert</dt><dd>${esc(r.post.texts.veraendert)}</dd>`:''}${r.post&&r.post.texts&&r.post.texts.mitnehmen?`<dt>Nimmt mit</dt><dd>${esc(r.post.texts.mitnehmen)}</dd>`:''}</dl></div>`:''}
   ${ciList.length?`<div class="stack" style="gap:10px"><h3>Check-Ins</h3>${ciList.map(({x,c})=>`<dl class="kv"><dt>${esc(fmtDate(x.date))}</dt><dd><b>${esc(zt(c.zustand))}</b> · Anspannung ${n1(c.anspannung)} · Energie ${n1(c.energie)}${c.aufgefallen?`<br>Aufgefallen: ${esc(c.aufgefallen)}`:''}${c.heute?`<br>Braucht heute: ${esc(c.heute)}`:''}</dd></dl>`).join('')}</div>`:''}
   ${pr.length?`<p class="small"><span class="muted">Im Alltag ausprobiert:</span> ${pr.map(esc).join(', ')}</p>`:''}
+  ${wsAdminHtml(r)}
   </div></details>`;
 }
 function adminBuchung(){
@@ -843,11 +1016,12 @@ function adminBuchung(){
 }
 
 /* ---------- Ereignisse ---------- */
-document.addEventListener('input',e=>{const t=e.target;if(t.matches('input[type=range][data-out]')){const o=document.getElementById(t.dataset.out);if(o)o.textContent=t.value}});
+document.addEventListener('input',e=>{const t=e.target;if(t.dataset&&t.dataset.ws&&S.wsA){S.wsA.a[t.dataset.ws]=t.value;wsStore(S.wsA.sid)}if(t.matches('input[type=range][data-out]')){const o=document.getElementById(t.dataset.out);if(o)o.textContent=t.value}});
 document.addEventListener('change',async e=>{
   const t=e.target;
   if(t.matches('[data-act="practiced"]')){const r=myRec(t.dataset.sid);r.practiced=r.practiced||{};if(t.checked)r.practiced[t.dataset.eid]=new Date().toISOString();else delete r.practiced[t.dataset.eid];await persistMe();render()}
   if(t.matches('[data-act="eval-sem"]')){S.evalSid=t.value;render()}
+  if(t.dataset&&t.dataset.wsC&&S.wsA){S.wsA.a[t.dataset.wsC]=t.checked;wsStore(S.wsA.sid)}
 });
 document.addEventListener('click',async e=>{
   const g=e.target.closest('[data-go]');
@@ -862,11 +1036,17 @@ document.addEventListener('click',async e=>{
     try{if(act==='reset'){await FB.sendPasswordResetEmail(S.auth,em.trim());showFlash('Wir haben dir eine Mail zum Zurücksetzen geschickt. Schau auch im Spam-Ordner nach.')}else{await sendLink(em.trim());go('login',{sent:em.trim()})}}catch(err){showFlash(authErr(err,act),true)}}
   else if(act==='seed'){a.disabled=true;await seedDefaults()}
   else if(act==='del-me-ask'){S.delAsk=true;render()}
-  else if(act==='delete-me'){if(await deleteMyData()){S.flash={msg:'Deine Daten sind gelöscht.'};go('home')}}
+  else if(act==='delete-me'){if(await deleteMyData()){try{Object.keys(localStorage).filter(k=>k.startsWith('ws-modus-')).forEach(k=>localStorage.removeItem(k))}catch(e){}S.wsA=null;S.flash={msg:'Deine Daten sind gelöscht.'};go('home')}}
   else if(act==='export'){const data=JSON.stringify({exportiertAm:new Date().toISOString(),email:S.user&&S.user.email||'',daten:S.me},null,2);const u=URL.createObjectURL(new Blob([data],{type:'application/json'}));const l=document.createElement('a');l.href=u;l.download='seminarbegleitung-meine-daten.json';document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(u),2000)}
   else if(act==='choose')go('home',{choose:true});
   else if(act==='open-assess')go('assess',{kind:a.dataset.kind});
   else if(act==='open-checkin')go('checkin',{sess:a.dataset.sess});
+  else if(act==='open-ws'){S.wsA=null;const d=wsDraft(S.me.current);go('ws',{step:Object.keys(d).length?1:0})}
+  else if(act==='ws-step')go('ws',{step:Number(a.dataset.step)});
+  else if(act==='ws-chip'){const el=document.getElementById('ws-'+a.dataset.k);if(el){const v=a.dataset.v,cur=el.value.trim();if(!cur.split(/,\s*/).includes(v)){el.value=cur?cur+', '+v:v;S.wsA.a[a.dataset.k]=el.value;wsStore(S.wsA.sid)}el.focus()}}
+  else if(act==='ws-share'){const sid=S.wsA.sid;const r=myRec(sid);r.ws=Object.assign({},r.ws,{modusmodell:{at:new Date().toISOString(),a:clone(S.wsA.a)}});if(await persistMe()){S.flash={msg:'Danke! Nicole sieht jetzt dein Modusmodell.'};render()}}
+  else if(act==='ws-unshare'){const r=myRec(S.wsA.sid);if(r.ws)delete r.ws.modusmodell;if(await persistMe()){S.flash={msg:'Nicole sieht dein Modusmodell nicht mehr. Dein Entwurf auf diesem Gerät bleibt.'};render()}}
+  else if(act==='ws-copy'){const t=wsText(S.wsA.a);try{await navigator.clipboard.writeText(t);showFlash('Text kopiert.')}catch(err){const el=document.getElementById('ws-sum');if(el){const rg=document.createRange();rg.selectNodeContents(el);const sel=getSelection();sel.removeAllRanges();sel.addRange(rg)}showFlash('Text markiert, kopiere ihn mit Strg+C.')}}
   else if(act==='atab'){S.atab=a.dataset.tab;render()}
   else if(act==='new-sem'){S.editing={id:uid('sem'),title:'',subtitle:'',format:'Workshop',status:'entwurf',place:'',price:'',link:'',description:'',order:S.seminars.length+1,sessions:[{id:uid('t'),date:'',time:'',title:'Termin 1',focus:'',exerciseIds:[],done:false}]};go('sem-edit')}
   else if(act==='edit-sem'){S.editing=clone(semById(a.dataset.id));go('sem-edit')}
